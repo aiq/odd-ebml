@@ -9,8 +9,12 @@ struct oEbmlDate {
 };
 typedef struct oEbmlDate oEbmlDate;
 
+ODDEBML_API oEbmlDate ebml_date_o( cDate d, cDaytime dt, cTzOffset tz );
+
+ODDEBML_API cTime ebml_date_as_time_o( oEbmlDate ed );
 ODDEBML_API cTimestamp ebml_date_as_timestamp_o( oEbmlDate ed );
 
+ODDEBML_API oEbmlDate ebml_date_from_time_o( cTime t );
 ODDEBML_API oEbmlDate ebml_date_from_timestamp_o( cTimestamp ts );
 
 #endif

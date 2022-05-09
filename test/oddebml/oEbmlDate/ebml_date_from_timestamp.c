@@ -1,4 +1,4 @@
-#include <clingo/lang/expect.h>
+#include "clingo/lang/expect.h"
 #include "oddebml/oEbmlDate.h"
 
 TEMP_SLICE_DEF_C_(
