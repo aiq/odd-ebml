@@ -5,6 +5,7 @@ set( INC_FILES
    ${INC_DIR}/oddebml/apidecl.h
    ${INC_DIR}/oddebml/version.h
 
+   ${INC_DIR}/oddebml/OEbmlBuilder.h
    ${INC_DIR}/oddebml/oEbmlDate.h
    ${INC_DIR}/oddebml/oEbmlId.h
    ${INC_DIR}/oddebml/oEbmlSize.h
@@ -14,6 +15,7 @@ set( INC_FILES
 # SRC_FILES
 ################################################################################
 set( SRC_FILES
+   ${SRC_DIR}/oddebml/OEbmlBuilder.c
    ${SRC_DIR}/oddebml/oEbmlDate.c
    ${SRC_DIR}/oddebml/oEbmlId.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
