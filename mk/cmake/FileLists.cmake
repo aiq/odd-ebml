@@ -24,7 +24,7 @@ set( SRC_FILES
 ################################################################################
 set( TEST_FILES
    # oEbmlDate
-   ${TEST_DIR}/oddebml/oEbmlDate/ebml_date_from_timestamp.c
+   ${TEST_DIR}/oddebml/oEbmlDate/as_ebml_date.c
    # oEbmlId
    ${TEST_DIR}/oddebml/oEbmlId/decode_ebml_id.c
    ${TEST_DIR}/oddebml/oEbmlId/ebml_id_is_valid.c

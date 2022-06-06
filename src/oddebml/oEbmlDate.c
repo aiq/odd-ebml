@@ -1,26 +1,82 @@
 #include "oddebml/oEbmlDate.h"
 
+#include "clingo/type/int32.h"
+
+#define UNIX_SECS_DIFF 978307200
+
+/*******************************************************************************
+********************************************************* Types and Definitions
+********************************************************************************
+ generated
+*******************************************************************************/
+
+SLICE_IMPL_C_(
+   oEbmlDate,              // Type
+   oEbmlDateSlice,         // SliceType
+   ebml_date_slice_o,      // FuncName
+   oVarEbmlDateSlice,      // VarSliceType
+   var_ebml_date_slice_o   // VarFuncName
+)
+
+/*******************************************************************************
+********************************************************************* Functions
+********************************************************************************
+ init
+*******************************************************************************/
+
+oEbmlDate default_ebml_date_o( void )
+{
+   return (oEbmlDate){ ._v=0 };
+}
+
 oEbmlDate ebml_date_o( cDate d, cDaytime dt, cTzOffset tz )
 {
-   return ebml_date_from_time_o( time_c( d, dt, tz ) );
+   return as_ebml_date_o( time_c( d, dt, tz ) );
 }
 
-cTime ebml_date_as_time_o( oEbmlDate ed )
+cTime from_ebml_date_o( oEbmlDate ed )
 {
-   return local_time_c();
+   cDuration nsec;
+   cDuration sec = truncate_duration_c( nsecs_c( ed._v ), C_Sec, &nsec );
+
+   int32_t n;
+   if ( not int64_to_int32_c( nsec._v, &n ) ) return null_time_c();
+
+   return (cTime){ as_secs_c( sec ) + UNIX_SECS_DIFF, n, 0 };
 }
 
-cTimestamp ebml_date_as_timestamp_o( oEbmlDate ed )
+oEbmlDate as_ebml_date_o( cTime t )
 {
-   return now_c();
+   cDuration dur = add_duration_c( secs_c( t._s - UNIX_SECS_DIFF ), nsecs_c( t._n ) );
+   return (oEbmlDate){ ._v=dur._v };
 }
 
-oEbmlDate ebml_date_from_time_o( cTime t )
+/*******************************************************************************
+ overall
+*******************************************************************************/
+
+int cmp_ebml_date_c( oEbmlDate a, oEbmlDate b )
 {
-   return (oEbmlDate){ ._v = 0 };
+   return cmp_int64_c( a._v, b._v );
 }
 
-oEbmlDate ebml_date_from_timestamp_o( cTimestamp ts )
+extern inline bool eq_ebml_date_c( oEbmlDate a, oEbmlDate b );
+
+/*******************************************************************************
+ io
+*******************************************************************************/
+
+bool record_ebml_date_o( cRecorder rec[static 1], oEbmlDate date )
 {
-   return (oEbmlDate){ ._v = 0 };
+   int64_t raw = swap_int64_to_c( date._v, c_BigEndian );
+   return record_int64_c( rec, raw );
+}
+
+bool scan_ebml_date_o( cScanner sca[static 1], oEbmlDate date[static 1] )
+{
+   int64_t i64;
+   if ( not scan_int64_c( sca, &i64 ) ) return false;
+
+   date->_v = swap_int64_from_c( i64, c_BigEndian );
+   return true;
 }
