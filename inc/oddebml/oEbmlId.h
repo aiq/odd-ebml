@@ -73,4 +73,8 @@ ODDEBML_API bool record_ebml_id_o( cRecorder rec[static 1], oEbmlId id );
 
 ODDEBML_API bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] );
 
+ODDEBML_API bool write_ebml_id_o( cRecorder rec[static 1],
+                                  oEbmlId id,
+                                  char const fmt[static 1] );
+
 #endif

@@ -1,6 +1,8 @@
 #include "oddebml/oEbmlSize.h"
 
 #include "_/misc.h"
+#include "clingo/io/write.h"
+#include "clingo/io/write_type.h"
 #include "clingo/type/int8.h"
 #include "clingo/type/int64.h"
 
@@ -143,9 +145,6 @@ bool ebml_size_is_unknown_o( oEbmlSize size )
  io
 *******************************************************************************/
 
-#include "clingo/io/print.h"
-#define pln_( ... ) pjotln_c_( xyz, 256, __VA_ARGS__ )
-
 union vint64Mixer {
    cByte arr[8];
    uint64_t u;
@@ -188,4 +187,30 @@ bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] )
    record_bytes_c( rec, idBytes );
    size->raw = swap_uint64_from_c( mixer.u, c_BigEndian );
    return true;
+}
+
+bool write_ebml_size_o( cRecorder rec[static 1],
+                        oEbmlSize size,
+                        char const fmt[static 1] )
+{
+   cScanner* sca = &cstr_scanner_c_( fmt );
+
+   if ( sca->space == 0 )
+   {
+      cRecorder* tmpRec = &recorder_c_( 32 );
+      record_ebml_size_o( tmpRec, size );
+      return write_recorded_c( rec, tmpRec, "bs/X/32/8" );
+   }
+
+   if ( unscanned_is_c( sca, "dbg" ) )
+   {
+      cRecorder* tmpRec = &recorder_c_( 32 );
+      record_ebml_size_o( tmpRec, size );
+      return write_c_( rec,
+         "{ .id={bs},", recorded_bytes_c( tmpRec ),
+         " .val={i64}", decode_ebml_size_o( size ),
+         " .len={i64} }", ebml_size_length_o( size )
+      );
+   }
+   return false;
 }

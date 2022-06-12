@@ -72,4 +72,8 @@ ODDEBML_API bool record_ebml_size_o( cRecorder rec[static 1], oEbmlSize size );
 ODDEBML_API
 bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] );
 
+ODDEBML_API bool write_ebml_size_o( cRecorder rec[static 1],
+                                    oEbmlSize size,
+                                    char const fmt[static 1] );
+
 #endif

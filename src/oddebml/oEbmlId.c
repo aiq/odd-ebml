@@ -1,6 +1,7 @@
 #include "oddebml/oEbmlId.h"
 
 #include "_/misc.h"
+#include "clingo/io/write.h"
 #include "clingo/type/int32.h"
 
 static uint32_t const O_LenMasks[] = {
@@ -156,4 +157,23 @@ bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] )
    record_bytes_c( rec, idBytes );
    id->raw = swap_uint32_from_c( mixer.u, c_BigEndian );
    return true;
+}
+
+bool write_ebml_id_o( cRecorder rec[static 1],
+                      oEbmlId id,
+                      char const fmt[static 1] )
+{
+   cScanner* sca = &cstr_scanner_c_( fmt );
+
+   if ( unscanned_is_c( sca, "dbg" ) )
+   {
+      cRecorder* tmpRec = &recorder_c_( 32 );
+      record_ebml_id_o( tmpRec, id );
+      return write_c_( rec,
+         "{ .id={bs//8},", recorded_bytes_c( tmpRec ),
+         " .val={i64}", decode_ebml_id_o( id ),
+         " .len={i64} }", ebml_id_length_o( id )
+      );
+   }
+   return false;
 }
