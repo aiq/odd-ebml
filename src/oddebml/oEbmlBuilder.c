@@ -1,5 +1,6 @@
-#include "oddebml/oEbmlBuilder.h"
+#include "oddebml/OEbmlBuilder.h"
 
+#include "_/oEbmlMarker.h"
 #include "clingo/io/cRecorder.h"
 #include "clingo/type/double.h"
 #include "clingo/type/float.h"
@@ -11,13 +12,6 @@
 #include "clingo/type/uint16.h"
 #include "clingo/type/uint32.h"
 #include "clingo/type/uint64.h"
-#include "oddebml/oEbmlSize.h"
-
-/*******************************************************************************
- internal
-*******************************************************************************/
-
-
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -27,6 +21,7 @@
 
 struct OEbmlBuilder
 {
+   oEbmlMarkerStack stack;
    cRecorder rec;
    int64_t len;
 };
@@ -39,6 +34,11 @@ static inline void cleanup( void* instance )
    if ( b->rec.mem )
    {
       free( b->rec.mem );
+   }
+
+   if ( b->stack.v )
+   {
+      free( b->stack.v );
    }
 }
 
@@ -64,7 +64,8 @@ OEbmlBuilder* make_ebml_builder_o( int64_t cap )
       return NULL;
    }
 
-   if ( not alloc_recorder_mem_c( &(result->rec), cap ) )
+   if ( not alloc_ebml_marker_stack_o( &(result->stack), 8 ) or
+        not alloc_recorder_mem_c( &(result->rec), cap ) )
    {
       release_c( result );
       return NULL;
@@ -83,15 +84,90 @@ OEbmlBuilder* new_ebml_builder_o( void )
 
 *******************************************************************************/
 
-bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id )
+cBytes built_ebml_c( OEbmlBuilder* b )
+{
+   return recorded_bytes_c( &(b->rec) );
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
 {
    must_exist_c_( b );
-   return false;
+
+   if ( not push_ebml_marker_o( &(b->stack), ebml_marker_o( id, b->rec.pos ) ) )
+   {
+      return false;
+   }
+
+   int64_t oldPos = b->rec.pos;
+   if ( not record_ebml_id_o( &(b->rec), id ) or
+        not record_ebml_size_o( &(b->rec), size ) )
+   {
+      oEbmlMarker marker;
+      pop_ebml_marker_o( &(b->stack), &marker );
+      move_recorder_to_c( &(b->rec), oldPos );
+      return false;
+   }
+
+   return true;
 }
+
+
+#define scanner_copy_c_( Sca )                                                 \
+(                                                                              \
+   (cScanner){ .pos=(Sca)->pos, .space=(Sca)->space, .mem=(Sca)->mem }         \
+)
 
 bool finish_ebml_master_o( OEbmlBuilder* b )
 {
    must_exist_c_( b );
+
+   oEbmlMarkerStack* stack = &(b->stack);
+   cRecorder* rec = &(b->rec);
+   cScanner* sca = &scanner_copy_c_( rec );
+
+   int64_t endPos = rec->pos;
+   once_c_( xsdlfjk )
+   {
+      oEbmlMarker marker;
+      if ( not pop_ebml_marker_o( stack, &marker ) ) break;
+
+      if ( not move_scanner_to_c( sca, marker.pos ) ) break;
+
+      oEbmlId id;
+      if ( not scan_ebml_id_o( sca, &id ) ) break;
+
+      int64_t sizePos = sca->pos;
+      oEbmlSize tmpSize;
+      if ( not scan_ebml_size_o( sca, &tmpSize ) ) break;
+
+      int64_t valPos = sca->pos;
+      int64_t valSize = endPos - valPos;
+      oEbmlSize size = encode_ebml_size_o( valSize );
+
+      int64_t sizeDiff = ebml_size_length_o( size ) - ebml_size_length_o( tmpSize );
+
+      if ( sizeDiff != 0 )
+      {
+         move_recorder_to_c( rec, valPos+sizeDiff );
+         if ( not record_mem_c( rec, sca->mem, valSize ) )
+         {
+            int64_t newCap = recorder_cap_c( rec ) * 2;
+            if ( not realloc_recorder_mem_c( rec, newCap ) ) break;
+            if ( not record_mem_c( rec, sca->mem, valSize ) ) break;
+         }
+         endPos = rec->pos;
+      }
+
+      move_recorder_to_c( rec, sizePos );
+      if ( not record_ebml_size_o( rec, size ) ) break;
+
+      return move_recorder_to_c( rec, endPos );
+   }
+
    return false;
 }
 
@@ -224,4 +300,10 @@ bool append_ebml_binary_o( OEbmlBuilder* b, oEbmlId id, cBytes val )
 {
    must_exist_c_( b );
    return append( b, id, val );
+}
+
+bool append_empty_ebml_o( OEbmlBuilder* b, oEbmlId id )
+{
+   must_exist_c_( b );
+   return append( b, id, empty_bytes_c() );
 }

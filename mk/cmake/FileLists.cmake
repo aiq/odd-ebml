@@ -25,6 +25,8 @@ set( SRC_FILES
 # TEST_FILES
 ################################################################################
 set( TEST_FILES
+   # oEbmlBuilder
+   ${TEST_DIR}/oddebml/oEbmlBuilder/OEbmlBuilder-overview.c
    # oEbmlDate
    ${TEST_DIR}/oddebml/oEbmlDate/as_ebml_date.c
    # oEbmlId

@@ -5,6 +5,7 @@
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlDate.h"
 #include "oddebml/oEbmlId.h"
+#include "oddebml/oEbmlSize.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -31,7 +32,17 @@ ODDEBML_API OEbmlBuilder* new_ebml_builder_o( void );
 
 *******************************************************************************/
 
-ODDEBML_API bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id );
+ODDEBML_API cBytes built_ebml_c( OEbmlBuilder* b );
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+#define begin_ebml_master_o_( Builder, Id )                                    \
+   begin_ebml_master_o( (Builder), (Id), unknown_ebml_size_o( 2 ) )
+ODDEBML_API bool begin_ebml_master_o( OEbmlBuilder* b,
+                                      oEbmlId id,
+                                      oEbmlSize size );
 
 ODDEBML_API bool finish_ebml_master_o( OEbmlBuilder* b );
 
@@ -52,5 +63,7 @@ ODDEBML_API bool append_ebml_utf8_o( OEbmlBuilder* b, oEbmlId id, cChars val );
 ODDEBML_API bool append_ebml_date_o( OEbmlBuilder* b, oEbmlId id, oEbmlDate val );
 
 ODDEBML_API bool append_ebml_binary_o( OEbmlBuilder* b, oEbmlId id, cBytes val );
+
+ODDEBML_API bool append_empty_ebml_o( OEbmlBuilder* b, oEbmlId id );
 
 #endif
