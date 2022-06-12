@@ -17,6 +17,7 @@ int main( void )
 
    testSlice tests = slice_c_( test,
       t_( 0xffffffffffffffff, 0 ),
+      t_( 0x5000, 2 ),
       t_( 0x01ffffffffffffff, 8 ),
       t_( 0x1a45dfa3, 4 ),
       t_( 0x3e83bb, 3 ),

@@ -184,6 +184,7 @@ bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] )
 
    union vint64Mixer mixer;
    cRecorder* rec = &make_recorder_c_( 8, mixer.arr );
+   record_pad_c( rec, 0x00, 8-idBytes.s );
    record_bytes_c( rec, idBytes );
    size->raw = swap_uint64_from_c( mixer.u, c_BigEndian );
    return true;

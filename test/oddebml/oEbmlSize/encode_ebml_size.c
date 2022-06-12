@@ -21,6 +21,7 @@ int main( void )
       t_( 0x286, 0x4286 ),
       t_( 0x7a, 0xfa ),
       t_( 0x8, 0x88 ),
+      t_( 4096, 0x5000 ),
       t_( 0xffffffffffffff, 0x01ffffffffffffff )
    );
 

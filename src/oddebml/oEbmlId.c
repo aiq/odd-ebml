@@ -152,6 +152,7 @@ bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] )
 
    union vint32Mixer mixer;
    cRecorder* rec = &make_recorder_c_( 4, mixer.arr );
+   record_pad_c( rec, 0x00, 4-idBytes.s );
    record_bytes_c( rec, idBytes );
    id->raw = swap_uint32_from_c( mixer.u, c_BigEndian );
    return true;

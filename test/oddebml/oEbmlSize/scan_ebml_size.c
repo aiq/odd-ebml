@@ -23,6 +23,7 @@ int main( void )
       t_( slice_c_( cByte, 0x1a, 0x45, 0xdf, 0xa3, 0x00 ), 0x1a45dfa3 ),
       t_( slice_c_( cByte, 0x3e, 0x83, 0xbb, 0x00 ), 0x3e83bb ),
       t_( slice_c_( cByte, 0x42, 0x86, 0x00 ), 0x4286 ),
+      t_( slice_c_( cByte, 0x50, 0x00, 0x42, 0x86 ), 0x5000 ),
       t_( slice_c_( cByte, 0xfa, 0x00 ), 0xfa )
    );
 
@@ -37,4 +38,6 @@ int main( void )
       write_c_( rec, "expected {u64:x}, got {u64:x}", t->exp, size.raw );
       tap_desc_c( res, turn_into_cstr_c( rec ) );
    }
+
+   return finish_tap_c_();
 }

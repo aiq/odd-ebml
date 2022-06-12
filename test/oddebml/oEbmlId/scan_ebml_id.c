@@ -33,4 +33,6 @@ int main( void )
       write_c_( rec, "expected {u32:x}, got {u32:x}", t->exp, id.raw );
       tap_desc_c( res, turn_into_cstr_c( rec ) );
    }
+
+   return finish_tap_c_();
 }
