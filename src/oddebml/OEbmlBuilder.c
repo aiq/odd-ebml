@@ -115,12 +115,6 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
    return true;
 }
 
-
-#define scanner_copy_c_( Sca )                                                 \
-(                                                                              \
-   (cScanner){ .pos=(Sca)->pos, .space=(Sca)->space, .mem=(Sca)->mem }         \
-)
-
 bool finish_ebml_master_o( OEbmlBuilder* b )
 {
    must_exist_c_( b );
