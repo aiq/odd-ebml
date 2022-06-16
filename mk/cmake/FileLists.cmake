@@ -13,6 +13,7 @@ set( INC_FILES
    ${INC_DIR}/oddebml/OEbmlParser.h
    ${INC_DIR}/oddebml/OEbmlSchema.h
    ${INC_DIR}/oddebml/oEbmlSize.h
+   ${INC_DIR}/oddebml/oEbmlToken.h
 )
 
 ################################################################################
@@ -31,6 +32,7 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/OEbmlParser.c
    ${SRC_DIR}/oddebml/OEbmlSchema.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
+   ${SRC_DIR}/oddebml/oEbmlToken.c
 )
 
 ################################################################################
