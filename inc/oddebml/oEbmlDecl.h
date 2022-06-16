@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_ELEMENT_H
-#define ODDEBML_EBML_ELEMENT_H
+#ifndef ODDEBML_EBML_DECL_H
+#define ODDEBML_EBML_DECL_H
 
 #include "oddebml/apidecl.h"
 #include "oddebml/o_EbmlType.h"
@@ -9,12 +9,12 @@
 ********************************************************* Types and Definitions
 *******************************************************************************/
 
-struct oEbmlElement;
-typedef struct oEbmlElement oEbmlElement;
+struct oEbmlDecl;
+typedef struct oEbmlDecl oEbmlDecl;
 
-struct oEbmlElement
+struct oEbmlDecl
 {
-   oEbmlElement const* parent;
+   oEbmlDecl const* parent;
    char const* name;
    oEbmlId id;
    int64_t minOccurs;
@@ -22,37 +22,37 @@ struct oEbmlElement
    o_EbmlType type;
 };
 
-struct oEbmlElementPtrSlice
+struct oEbmlDeclPtrSlice
 {
    int64_t s;
-   oEbmlElement* v;
+   oEbmlDecl* v;
 };
-typedef struct oEbmlElementPtrSlice oEbmlElementPtrSlice;
+typedef struct oEbmlDeclPtrSlice oEbmlDeclPtrSlice;
 
 /*******************************************************************************
 
 *******************************************************************************/
 
-ODDEBML_API extern oEbmlElement const O_EbmlRoot;
+ODDEBML_API extern oEbmlDecl const O_EbmlRoot;
 
-ODDEBML_API extern oEbmlElement const O_Ebml;
-ODDEBML_API extern oEbmlElement const O_EbmlVersion;
-ODDEBML_API extern oEbmlElement const O_EbmlReadVersion;
-ODDEBML_API extern oEbmlElement const O_EbmlMaxIdLength;
-ODDEBML_API extern oEbmlElement const O_EbmlMaxSizeLength;
+ODDEBML_API extern oEbmlDecl const O_Ebml;
+ODDEBML_API extern oEbmlDecl const O_EbmlVersion;
+ODDEBML_API extern oEbmlDecl const O_EbmlReadVersion;
+ODDEBML_API extern oEbmlDecl const O_EbmlMaxIdLength;
+ODDEBML_API extern oEbmlDecl const O_EbmlMaxSizeLength;
 
-ODDEBML_API extern oEbmlElement const O_EbmlDocType;
-ODDEBML_API extern oEbmlElement const O_EbmlDocTypeVersion;
-ODDEBML_API extern oEbmlElement const O_EbmlDocTypeReadVersion;
+ODDEBML_API extern oEbmlDecl const O_EbmlDocType;
+ODDEBML_API extern oEbmlDecl const O_EbmlDocTypeVersion;
+ODDEBML_API extern oEbmlDecl const O_EbmlDocTypeReadVersion;
 
-ODDEBML_API extern oEbmlElement const O_EbmlSignatureSlot;
-ODDEBML_API extern oEbmlElement const O_EbmlSignatureAlgo;
-ODDEBML_API extern oEbmlElement const O_EbmlSignatureHash;
-ODDEBML_API extern oEbmlElement const O_EbmlSignaturePublicKey;
-ODDEBML_API extern oEbmlElement const O_EbmlSignature;
-ODDEBML_API extern oEbmlElement const O_EbmlSignatureElements;
-ODDEBML_API extern oEbmlElement const O_EbmlSignatureElementList;
-ODDEBML_API extern oEbmlElement const O_EbmlSignedElement;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignatureSlot;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignatureAlgo;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignatureHash;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignaturePublicKey;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignature;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignatureElements;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignatureElementList;
+ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
 
 /*******************************************************************************
 ********************************************************************* Functions
@@ -60,9 +60,9 @@ ODDEBML_API extern oEbmlElement const O_EbmlSignedElement;
 
 *******************************************************************************/
 
-#define ebml_element_o_( Parent, Name, Id, MinOccurs, MaxOccurs, Type )        \
+#define ebml_decl_o_( Parent, Name, Id, MinOccurs, MaxOccurs, Type )           \
 (                                                                              \
-   (oEbmlElement){                                                             \
+   (oEbmlDecl){                                                                \
       .parent=(Parent),                                                        \
       .name=(Name),                                                            \
       .id=(Id),                                                                \

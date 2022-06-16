@@ -12,7 +12,7 @@
 
 *******************************************************************************/
 
-OEbmlSchema* build_ebml_schema_o( oEbmlElementPtrSlice elements,
+OEbmlSchema* build_ebml_schema_o( oEbmlDeclPtrSlice elements,
                                   cErrorStack es[static 1] )
 {
    return NULL;

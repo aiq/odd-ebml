@@ -1,4 +1,4 @@
-#include "oddebml/oEbmlElement.h"
+#include "oddebml/oEbmlDecl.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -6,7 +6,7 @@
 
 *******************************************************************************/
 
-#define oEBML_ELEMENT_LIST_                                                    \
+#define oEBML_HEADER_DECL_LIST_                                                \
    XMAP_C_( O_EbmlRoot, NULL, "", 0x00, 1, 1, o_EbmlMaster ) \
     \
    XMAP_C_( O_Ebml,                    &O_EbmlRoot,   "EBML",                 0x1A45DFA3, 1, 1, o_EbmlMaster ) \
@@ -31,9 +31,9 @@
    XMAP_C_( O_EbmlSignedElement,          &O_EbmlSignatureElementList,  "SignatureElement",     0x6532, 0, INT64_MAX, o_EbmlBinary )
 
 #define XMAP_C_( Var, Parent, Name, Id, MinOccurs, MaxOccurs, Type )           \
-oEbmlElement const Var = ebml_element_o_( Parent, Name, (oEbmlId){ .raw=Id }, MinOccurs, MaxOccurs, Type );
+oEbmlDecl const Var = ebml_decl_o_( Parent, Name, (oEbmlId){ .raw=Id }, MinOccurs, MaxOccurs, Type );
 
-oEBML_ELEMENT_LIST_;
+oEBML_HEADER_DECL_LIST_;
 #undef XMAP_C_
 
 /*******************************************************************************

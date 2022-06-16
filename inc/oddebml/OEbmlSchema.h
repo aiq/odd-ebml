@@ -4,7 +4,7 @@
 #include "clingo/lang/CObject.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/error.h"
-#include "oddebml/oEbmlElement.h"
+#include "oddebml/oEbmlDecl.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -39,7 +39,7 @@ typedef struct OEbmlSchema OEbmlSchema;
 
 *******************************************************************************/
 
-ODDEBML_API OEbmlSchema* build_ebml_schema_o( oEbmlElementPtrSlice elements,
+ODDEBML_API OEbmlSchema* build_ebml_schema_o( oEbmlDeclPtrSlice elements,
                                               cErrorStack es[static 1] );
 
 /*******************************************************************************

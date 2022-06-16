@@ -4,7 +4,6 @@
 #include "clingo/lang/CObject.h"
 #include "clingo/lang/error.h"
 #include "oddebml/apidecl.h"
-#include "oddebml/oEbmlElement.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
