@@ -191,6 +191,12 @@ static bool append( OEbmlBuilder* b, oEbmlId id, cBytes bytes )
       record_bytes_c( rec, bytes );
 }
 
+bool append_ebml_element_o( OEbmlBuilder* b, oEbmlElement const elem[static 1] )
+{
+   must_exist_c_( b );
+   return append( b, elem->id, elem->bytes );
+}
+
 bool append_embl_int_o( OEbmlBuilder* b, oEbmlId id, int64_t val )
 {
    must_exist_c_( b );

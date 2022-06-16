@@ -3,8 +3,7 @@
 
 #include "clingo/lang/CObject.h"
 #include "oddebml/apidecl.h"
-#include "oddebml/oEbmlDate.h"
-#include "oddebml/oEbmlId.h"
+#include "oddebml/oEbmlElement.h"
 #include "oddebml/oEbmlSize.h"
 
 /*******************************************************************************
@@ -49,6 +48,9 @@ ODDEBML_API bool finish_ebml_master_o( OEbmlBuilder* b );
 /*******************************************************************************
  append
 *******************************************************************************/
+
+ODDEBML_API
+bool append_ebml_element_o( OEbmlBuilder* b, oEbmlElement const tok[static 1] );
 
 ODDEBML_API bool append_embl_int_o( OEbmlBuilder* b, oEbmlId id, int64_t val );
 

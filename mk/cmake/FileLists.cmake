@@ -9,11 +9,11 @@ set( INC_FILES
    ${INC_DIR}/oddebml/OEbmlBuilder.h
    ${INC_DIR}/oddebml/oEbmlDate.h
    ${INC_DIR}/oddebml/oEbmlDecl.h
+   ${INC_DIR}/oddebml/oEbmlElement.h
    ${INC_DIR}/oddebml/oEbmlId.h
    ${INC_DIR}/oddebml/OEbmlParser.h
    ${INC_DIR}/oddebml/OEbmlSchema.h
    ${INC_DIR}/oddebml/oEbmlSize.h
-   ${INC_DIR}/oddebml/oEbmlToken.h
 )
 
 ################################################################################
@@ -21,6 +21,7 @@ set( INC_FILES
 ################################################################################
 set( SRC_FILES
    ${SRC_DIR}/_/misc.c
+   ${SRC_DIR}/_/oEbmlElementStack.c
    ${SRC_DIR}/_/oEbmlMarker.c
 
    ${SRC_DIR}/oddebml/error.c
@@ -28,11 +29,11 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/OEbmlBuilder.c
    ${SRC_DIR}/oddebml/oEbmlDate.c
    ${SRC_DIR}/oddebml/oEbmlDecl.c
+   ${SRC_DIR}/oddebml/oEbmlElement.c
    ${SRC_DIR}/oddebml/oEbmlId.c
    ${SRC_DIR}/oddebml/OEbmlParser.c
    ${SRC_DIR}/oddebml/OEbmlSchema.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
-   ${SRC_DIR}/oddebml/oEbmlToken.c
 )
 
 ################################################################################

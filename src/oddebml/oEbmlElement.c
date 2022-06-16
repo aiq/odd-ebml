@@ -1,4 +1,4 @@
-#include "oddebml/oEbmlToken.h"
+#include "oddebml/oEbmlElement.h"
 
 #include "clingo/type/double.h"
 #include "clingo/type/float.h"
@@ -10,9 +10,9 @@
  init
 *******************************************************************************/
 
-bool get_ebml_int_o( oEbmlToken const tok[static 1], int64_t val[static 1] )
+bool get_ebml_int_o( oEbmlElement const elem[static 1], int64_t val[static 1] )
 {
-   cBytes bin = tok->bytes;
+   cBytes bin = elem->bytes;
    if ( not in_range_c_( 0, bin.s, 8 ) ) return false;
 
    if ( is_empty_c_( bin ) )
@@ -29,9 +29,9 @@ bool get_ebml_int_o( oEbmlToken const tok[static 1], int64_t val[static 1] )
 	return true;
 }
 
-bool get_ebml_uint_o( oEbmlToken const tok[static 1], uint64_t val[static 1] )
+bool get_ebml_uint_o( oEbmlElement const elem[static 1], uint64_t val[static 1] )
 {
-   cBytes bin = tok->bytes;
+   cBytes bin = elem->bytes;
    if ( not in_range_c_( 0, bin.s, 8 ) ) return false;
 
    if ( is_empty_c_( bin ) )
@@ -46,15 +46,15 @@ bool get_ebml_uint_o( oEbmlToken const tok[static 1], uint64_t val[static 1] )
 	return true;
 }
 
-bool get_ebml_float_o( oEbmlToken const tok[static 1], double val[static 1] )
+bool get_ebml_float_o( oEbmlElement const elem[static 1], double val[static 1] )
 {
-   if ( is_empty_c_( tok->bytes ) )
+   if ( is_empty_c_( elem->bytes ) )
    {
       *val = 0.0;
       return true;
    }
 
-   cScanner* sca = &make_scanner_c_( tok->bytes.s, tok->bytes.v );
+   cScanner* sca = &make_scanner_c_( elem->bytes.s, elem->bytes.v );
    double d;
    if ( scan_double_c( sca, &d ) )
    {
@@ -72,9 +72,9 @@ bool get_ebml_float_o( oEbmlToken const tok[static 1], double val[static 1] )
    return false;
 }
 
-bool get_ebml_string_o( oEbmlToken const tok[static 1], cChars val[static 1] )
+bool get_ebml_string_o( oEbmlElement const elem[static 1], cChars val[static 1] )
 {
-   cBytes bin = tok->bytes;
+   cBytes bin = elem->bytes;
    if ( is_empty_c_( bin ) )
    {
       *val = empty_chars_c();
@@ -94,9 +94,9 @@ bool get_ebml_string_o( oEbmlToken const tok[static 1], cChars val[static 1] )
    return true;
 }
 
-bool get_ebml_utf8_o( oEbmlToken const tok[static 1], cChars val[static 1] )
+bool get_ebml_utf8_o( oEbmlElement const elem[static 1], cChars val[static 1] )
 {
-   cBytes bin = tok->bytes;
+   cBytes bin = elem->bytes;
    if ( is_empty_c_( bin ) )
    {
       *val = empty_chars_c();
@@ -114,15 +114,15 @@ bool get_ebml_utf8_o( oEbmlToken const tok[static 1], cChars val[static 1] )
    return true;
 }
 
-bool get_ebml_date_o( oEbmlToken const tok[static 1], oEbmlDate val[static 1] )
+bool get_ebml_date_o( oEbmlElement const elem[static 1], oEbmlDate val[static 1] )
 {
-   if ( is_empty_c_( tok->bytes ) )
+   if ( is_empty_c_( elem->bytes ) )
    {
       *val = default_ebml_date_o();
       return true;
    }
 
-   cScanner* sca = &make_scanner_c_( tok->bytes.s, tok->bytes.v );
+   cScanner* sca = &make_scanner_c_( elem->bytes.s, elem->bytes.v );
    return scan_ebml_date_o( sca, val );
 }
 
@@ -130,17 +130,17 @@ bool get_ebml_date_o( oEbmlToken const tok[static 1], oEbmlDate val[static 1] )
  io
 *******************************************************************************/
 
-bool record_ebml_token_o( cRecorder rec[static 1],
-                          oEbmlToken const tok[static 1] )
+bool record_ebml_element_o( cRecorder rec[static 1],
+                            oEbmlElement const elem[static 1] )
 {
-   oEbmlSize size = encode_ebml_size_o( tok->bytes.s );
-   int64_t len = ebml_id_length_o( tok->id ) + ebml_size_length_o( size ) + tok->bytes.s;
+   oEbmlSize size = encode_ebml_size_o( elem->bytes.s );
+   int64_t len = ebml_id_length_o( elem->id ) + ebml_size_length_o( size ) + elem->bytes.s;
    if ( rec->space < len ) return false;
 
    int64_t oldPos = rec->pos;
-   if ( record_ebml_id_o( rec, tok->id ) and
+   if ( record_ebml_id_o( rec, elem->id ) and
         record_ebml_size_o( rec, size ) and
-        record_bytes_c( rec, tok->bytes ) )
+        record_bytes_c( rec, elem->bytes ) )
    {
       return true;
    }
@@ -148,7 +148,7 @@ bool record_ebml_token_o( cRecorder rec[static 1],
    return false;
 }
 
-bool scan_ebml_token_o( cScanner sca[static 1], oEbmlToken tok[static 1] )
+bool scan_ebml_element_o( cScanner sca[static 1], oEbmlElement elem[static 1] )
 {
    int64_t oldPos = sca->pos;
    once_c_( xyz )
@@ -165,8 +165,8 @@ bool scan_ebml_token_o( cScanner sca[static 1], oEbmlToken tok[static 1] )
       cBytes bytes = unscanned_bytes_c( sca, size );
       if ( bytes.s != size ) break;
 
-      tok->id = eid;
-      tok->bytes = bytes;
+      elem->id = eid;
+      elem->bytes = bytes;
       return true;
    }
    move_scanner_to_c( sca, oldPos );
