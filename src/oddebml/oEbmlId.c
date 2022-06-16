@@ -77,7 +77,7 @@ int32_t decode_ebml_id_o( oEbmlId id )
 {
    int8_t len = ebml_id_length_o( id );
    return len > 0 ? int32_c_( id.raw & O_ValMasks[ len-1 ] )
-                  : 0;
+                  : -1;
 }
 
 int8_t ebml_id_length_o( oEbmlId id )

@@ -109,7 +109,7 @@ int64_t decode_ebml_size_o( oEbmlSize size )
 {
    int8_t len = ebml_size_length_o( size );
    return len > 0 ? int64_c_( size.raw & O_ValMasks[ len-1 ] )
-                  : 0;
+                  : -1;
 }
 
 int8_t ebml_size_length_o( oEbmlSize size )
