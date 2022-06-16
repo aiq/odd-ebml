@@ -31,7 +31,7 @@ oEbmlMarker ebml_marker_o( oEbmlId id, int64_t pos )
 
 bool alloc_ebml_marker_stack_o( oEbmlMarkerStack stack[static 1], int64_t size )
 {
-   stack->v = alloc_c( size );
+   stack->v = alloc_array_c_( size, oEbmlMarker );
    if ( stack->v == NULL ) return false;
 
    stack->s = 0;
@@ -42,7 +42,7 @@ bool alloc_ebml_marker_stack_o( oEbmlMarkerStack stack[static 1], int64_t size )
 
 bool realloc_ebml_marker_stack_o( oEbmlMarkerStack stack[static 1], int64_t size )
 {
-   void* mem = realloc_c( stack->v, size );
+   void* mem = realloc_array_c_( stack->v, size, oEbmlMarker );
    if ( mem == NULL ) return false;
 
    stack->v = mem;
