@@ -111,7 +111,7 @@ bool go_to_ebml_sibling_o( OEbmlParser* p,
 bool curr_ebml_element_o( OEbmlParser const* p, oEbmlElement elem[static 1] )
 {
    cScanner* sca = &scanner_copy_c_( &(p->sca) );
-   return scan_ebml_element_o( sca, elem );
+   return view_ebml_element_o( sca, elem );
 }
 
 bool first_ebml_child_o( OEbmlParser* p, oEbmlElement elem[static 1] )
