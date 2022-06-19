@@ -63,11 +63,15 @@ ODDEBML_API int8_t ebml_id_length_o( oEbmlId id );
 
 ODDEBML_API bool ebml_id_is_valid_o( oEbmlId id );
 
+ODDEBML_API bool eq_ebml_id_o( oEbmlId id, oEbmlId oth );
+
 ODDEBML_API oEbmlId invalid_ebml_id_o( void );
 
 /*******************************************************************************
  io
 *******************************************************************************/
+
+ODDEBML_API bool on_ebml_id_o( cScanner sca[static 1], oEbmlId id );
 
 ODDEBML_API bool record_ebml_id_o( cRecorder rec[static 1], oEbmlId id );
 

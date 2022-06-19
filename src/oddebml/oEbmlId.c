@@ -108,6 +108,11 @@ bool ebml_id_is_valid_o( oEbmlId id )
    return eq_c( cmp_ebml_id_o( id, oth ) );
 }
 
+bool eq_ebml_id_o( oEbmlId id, oEbmlId oth )
+{
+   return eq_c( cmp_ebml_id_o( id, oth ) );
+}
+
 oEbmlId invalid_ebml_id_o( void )
 {
    return ebml_id_o( 0 );
@@ -116,6 +121,13 @@ oEbmlId invalid_ebml_id_o( void )
 /*******************************************************************************
  io
 *******************************************************************************/
+
+bool on_ebml_id_o( cScanner sca[static 1], oEbmlId id )
+{
+   cScanner* tmpSca = &scanner_copy_c_( sca );
+   oEbmlId scaId;
+   return scan_ebml_id_o( tmpSca, &scaId ) and eq_c( cmp_ebml_id_o( id, scaId ) );
+}
 
 union vint32Mixer {
    cByte arr[4];
