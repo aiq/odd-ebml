@@ -50,19 +50,19 @@ ODDEBML_API bool go_to_ebml_sibling_o( OEbmlParser* p,
 ODDEBML_API bool curr_ebml_element_o( OEbmlParser const* p,
                                       oEbmlElement elem[static 1] );
 
-ODDEBML_API
-bool first_ebml_child_o( OEbmlParser* p, oEbmlElement elem[static 1] );
+ODDEBML_API bool curr_ebml_id_o( OEbmlParser const* p, oEbmlId id[static 1] );
 
 ODDEBML_API
-bool next_ebml_sibling_o( OEbmlParser* p, oEbmlElement elem[static 1] );
+bool parse_ebml_child_o( OEbmlParser* p, oEbmlElement elem[static 1] );
 
 ODDEBML_API
-bool prev_ebml_parent_o( OEbmlParser* p, oEbmlElement elem[static 1] );
+bool parse_ebml_element_o( OEbmlParser* p, oEbmlElement elem[static 1] );
+
+ODDEBML_API
+bool parse_ebml_parent_o( OEbmlParser* p, oEbmlElement elem[static 1] );
 
 /*******************************************************************************
  
 *******************************************************************************/
-
-ODDEBML_API int64_t count_ebml_children_o( OEbmlParser* p, oEbmlId id );
 
 #endif

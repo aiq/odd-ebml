@@ -87,20 +87,46 @@ bool go_to_ebml_child_o( OEbmlParser* p,
                          oEbmlId id,
                          oEbmlElement elem[static 1] )
 {
+   int64_t n = 0;
+   while ( parse_ebml_child_o( p, elem ) )
+   {
+      ++n;
+      if ( eq_ebml_id_o( elem->id, id ) ) return true;
+   }
+   for ( int64_t i = 0; i < n; ++i )
+   {
+      parse_ebml_parent_o( p, elem );
+   }
    return false;
 }
 
 bool go_to_ebml_parent_o( OEbmlParser* p,
                           oEbmlId id,
-                          oEbmlElement tok[static 1] )
+                          oEbmlElement elem[static 1] )
 {
+   int64_t n = 0;
+   while ( parse_ebml_parent_o( p, elem ) )
+   {
+      ++n;
+      if ( eq_ebml_id_o( elem->id, id ) ) return true;
+   }
+   for ( int64_t i = 0; i < n; ++i )
+   {
+      parse_ebml_child_o( p, elem );
+   }
    return false;
 }
 
 bool go_to_ebml_sibling_o( OEbmlParser* p,
                            oEbmlId id,
-                           oEbmlElement tok[static 1] )
+                           oEbmlElement elem[static 1] )
 {
+   int64_t oldPos = p->sca.pos;
+   while ( parse_ebml_element_o( p, elem ) )
+   {
+      if ( eq_ebml_id_o( elem->id, id ) ) return true;
+   }
+   move_scanner_to_c( &(p->sca), oldPos );
    return false;
 }
 
@@ -114,26 +140,33 @@ bool curr_ebml_element_o( OEbmlParser const* p, oEbmlElement elem[static 1] )
    return view_ebml_element_o( sca, elem );
 }
 
-bool first_ebml_child_o( OEbmlParser* p, oEbmlElement elem[static 1] )
+bool curr_ebml_id_o( OEbmlParser const* p, oEbmlId id[static 1] )
 {
-   return false;
+   cScanner* sca = &scanner_copy_c_( &(p->sca) );
+   return scan_ebml_id_o( sca, id );
 }
 
-bool next_ebml_sibling_o( OEbmlParser* p, oEbmlElement elem[static 1] )
+bool parse_ebml_child_o( OEbmlParser* p, oEbmlElement elem[static 1] )
 {
-   return false;
+   oEbmlElement tmpElem;
+   if ( not curr_ebml_element_o( p, &tmpElem ) ) return false;
+   if ( not push_ebml_element_o( &(p->stack), tmpElem ) ) return false;
+
+   p->sca = make_scanner_c_( tmpElem.bytes.s, tmpElem.bytes.v );
+   return curr_ebml_element_o( p, elem );
 }
 
-bool prev_ebml_parent_o( OEbmlParser* p, oEbmlElement elem[static 1] )
+bool parse_ebml_element_o( OEbmlParser* p, oEbmlElement elem[static 1] )
 {
-   return false;
+   return view_ebml_element_o( &(p->sca), elem );
+}
+
+bool parse_ebml_parent_o( OEbmlParser* p, oEbmlElement elem[static 1] )
+{
+   if ( p->stack.s == 0 ) return false;
+   return pop_ebml_element_o( &(p->stack), elem );
 }
 
 /*******************************************************************************
  
 *******************************************************************************/
-
-int64_t count_ebml_children_o( OEbmlParser* p, oEbmlId id )
-{
-   return 0;
-}
