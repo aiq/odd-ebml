@@ -61,7 +61,7 @@ static inline oEbmlSchemaItr itr_for_id( OEbmlSchema const* schema,
    oEbmlDeclStack const* stack = get_from_schema_map_o( schema->map, pid );
    if ( stack == NULL ) return start_ebml_schema_itr_o();
 
-   uint32_t i = 0;
+   uint16_t i = 0;
    for_each_c_( oEbmlDecl const*, decl, *stack )
    {
       if ( decl->id.raw == rawId )

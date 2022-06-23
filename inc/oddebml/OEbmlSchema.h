@@ -20,8 +20,8 @@ typedef struct OEbmlSchema OEbmlSchema;
 struct oEbmlSchemaItr
 {
    uint32_t _i;
-   uint32_t _n;
-   int32_t level;
+   uint16_t _n;
+   int16_t level;
 };
 typedef struct oEbmlSchemaItr oEbmlSchemaItr;
 
@@ -64,7 +64,7 @@ oEbmlDeclSlice get_sub_ebml_decl_o( OEbmlSchema const* schema,
 ODDEBML_API bool attach_ebml_header_schema_o( OEbmlSchema* schema );
 
 /*******************************************************************************
-
+ itr
 *******************************************************************************/
 
 #define iterate_ebml_schema_c_( Itr, DeclPtr, Schema )                         \
