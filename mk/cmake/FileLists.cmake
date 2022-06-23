@@ -24,6 +24,7 @@ set( SRC_FILES
    ${SRC_DIR}/_/misc.c
    ${SRC_DIR}/_/oEbmlElementStack.c
    ${SRC_DIR}/_/oEbmlMarker.c
+   ${SRC_DIR}/_/OEbmlSchemaMisc.c
 
    ${SRC_DIR}/oddebml/error.c
    ${SRC_DIR}/oddebml/o_EbmlType.c
@@ -53,6 +54,8 @@ set( TEST_FILES
    ${TEST_DIR}/oddebml/oEbmlId/encode_ebml_id.c
    ${TEST_DIR}/oddebml/oEbmlId/record_ebml_id.c
    ${TEST_DIR}/oddebml/oEbmlId/scan_ebml_id.c
+   # OEbmlSchema
+   ${TEST_DIR}/oddebml/OEbmlSchema/iterate_ebml_schema.c
    # oEbmlSize
    ${TEST_DIR}/oddebml/oEbmlSize/decode_ebml_size.c
    ${TEST_DIR}/oddebml/oEbmlSize/ebml_size_is_unknown.c

@@ -46,6 +46,10 @@ bool FuncName( StackType stack[static 1], Type val )                           \
 {                                                                              \
    if ( stack->s == stack->cap )                                               \
    {                                                                           \
+      if ( stack->cap == 0 )                                                   \
+      {                                                                        \
+         stack->cap = 4;                                                       \
+      }                                                                        \
       int64_t newCap;                                                          \
       if ( not imul64_c( stack->cap, 2, &newCap ) or                           \
            not ReallocFunc( stack, newCap ) )                                  \
@@ -107,5 +111,9 @@ FREE_STACK_O_( free_##StackFuncSuffix, StackType )                             \
 PUSH_STACK_O_( push_##FuncSuffix, StackType, Type, realloc_##StackFuncSuffix ) \
 POP_STACK_O_( pop_##FuncSuffix, StackType, Type )                              \
 TOP_STACK_O_( top_##FuncSuffix, StackType, Type )
+
+/*******************************************************************************
+
+*******************************************************************************/
 
 #endif
