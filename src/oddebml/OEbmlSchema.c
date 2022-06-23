@@ -132,6 +132,7 @@ bool attach_ebml_decl_o( OEbmlSchema* schema,
    oEbmlDeclStack* stack = get_var_from_schema_map_o( schema->map,
                                                       parent->id.raw );
    if ( stack == NULL ) return false;
+   if ( stack->s == UINT16_MAX ) return false;
 
    if ( not push_ebml_decl_o( stack, *decl ) ) return false;
 
@@ -166,6 +167,7 @@ bool attach_many_ebml_decl_o( OEbmlSchema* schema,
    if ( not iadd64_c( stack->s, many.s, &reqCap ) ) return false;
    if ( reqCap > stack->cap )
    {
+      if ( reqCap > UINT16_MAX ) return false;
       if ( not realloc_ebml_decl_stack_o( stack, reqCap*2 ) ) return false;
    }
 
