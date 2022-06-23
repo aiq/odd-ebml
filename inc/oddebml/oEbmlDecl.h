@@ -9,25 +9,22 @@
 ********************************************************* Types and Definitions
 *******************************************************************************/
 
-struct oEbmlDecl;
-typedef struct oEbmlDecl oEbmlDecl;
-
 struct oEbmlDecl
 {
-   oEbmlDecl const* parent;
    char const* name;
    oEbmlId id;
    int64_t minOccurs;
    int64_t maxOccurs;
    o_EbmlType type;
 };
+typedef struct oEbmlDecl oEbmlDecl;
 
-struct oEbmlDeclPtrSlice
+struct oEbmlDeclSlice
 {
    int64_t s;
-   oEbmlDecl* v;
+   oEbmlDecl const* v;
 };
-typedef struct oEbmlDeclPtrSlice oEbmlDeclPtrSlice;
+typedef struct oEbmlDeclSlice oEbmlDeclSlice;
 
 /*******************************************************************************
 
@@ -60,10 +57,9 @@ ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
 
 *******************************************************************************/
 
-#define ebml_decl_o_( Parent, Name, Id, MinOccurs, MaxOccurs, Type )           \
+#define ebml_decl_o_( Name, Id, MinOccurs, MaxOccurs, Type )                   \
 (                                                                              \
    (oEbmlDecl){                                                                \
-      .parent=(Parent),                                                        \
       .name=(Name),                                                            \
       .id=(Id),                                                                \
       .minOccurs=(MinOccurs),                                                  \
@@ -71,5 +67,9 @@ ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
       .type=(Type)                                                             \
    }                                                                           \
 )
+
+ODDEBML_API bool write_ebml_decl_o( cRecorder rec[static 1],
+                                    oEbmlDecl const decl[static 1],
+                                    char const fmt[static 1] );
 
 #endif
