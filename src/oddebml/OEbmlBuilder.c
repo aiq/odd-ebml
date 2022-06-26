@@ -1,6 +1,6 @@
 #include "oddebml/OEbmlBuilder.h"
 
-#include "_/oEbmlMarker.h"
+#include "_/oEbmlBuilderMarker.h"
 #include "clingo/io/cRecorder.h"
 #include "clingo/type/double.h"
 #include "clingo/type/float.h"
@@ -21,7 +21,7 @@
 
 struct OEbmlBuilder
 {
-   oEbmlMarkerStack stack;
+   oEbmlBuilderMarkerStack stack;
    cRecorder rec;
    int64_t len;
 };
@@ -64,7 +64,7 @@ OEbmlBuilder* make_ebml_builder_o( int64_t cap )
       return NULL;
    }
 
-   if ( not alloc_ebml_marker_stack_o( &(result->stack), 8 ) or
+   if ( not alloc_ebml_builder_marker_stack_o( &(result->stack), 8 ) or
         not alloc_recorder_mem_c( &(result->rec), cap ) )
    {
       release_c( result );
@@ -97,7 +97,8 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
 {
    must_exist_c_( b );
 
-   if ( not push_ebml_marker_o( &(b->stack), ebml_marker_o( id, b->rec.pos ) ) )
+   oEbmlBuilderMarker marker = ebml_builder_marker_o( id, b->rec.pos );
+   if ( not push_ebml_builder_marker_o( &(b->stack), marker ) )
    {
       return false;
    }
@@ -106,8 +107,8 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
    if ( not record_ebml_id_o( &(b->rec), id ) or
         not record_ebml_size_o( &(b->rec), size ) )
    {
-      oEbmlMarker marker;
-      pop_ebml_marker_o( &(b->stack), &marker );
+      oEbmlBuilderMarker marker;
+      pop_ebml_builder_marker_o( &(b->stack), &marker );
       move_recorder_to_c( &(b->rec), oldPos );
       return false;
    }
@@ -119,15 +120,15 @@ bool finish_ebml_master_o( OEbmlBuilder* b )
 {
    must_exist_c_( b );
 
-   oEbmlMarkerStack* stack = &(b->stack);
+   oEbmlBuilderMarkerStack* stack = &(b->stack);
    cRecorder* rec = &(b->rec);
    cScanner* sca = &scanner_copy_c_( rec );
 
    int64_t endPos = rec->pos;
    once_c_( xsdlfjk )
    {
-      oEbmlMarker marker;
-      if ( not pop_ebml_marker_o( stack, &marker ) ) break;
+      oEbmlBuilderMarker marker;
+      if ( not pop_ebml_builder_marker_o( stack, &marker ) ) break;
 
       if ( not move_scanner_to_c( sca, marker.pos ) ) break;
 

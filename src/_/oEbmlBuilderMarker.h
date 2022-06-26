@@ -1,5 +1,5 @@
-#ifndef ODDEBML_INTERN_EBML_MARKER_H
-#define ODDEBML_INTERN_EBML_MARKER_H
+#ifndef ODDEBML_INTERN_EBML_BUILDER_MARKER_H
+#define ODDEBML_INTERN_EBML_BUILDER_MARKER_H
 
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlId.h"
@@ -12,29 +12,29 @@
  
 *******************************************************************************/
 
-struct oEbmlMarker {
+struct oEbmlBuilderMarker {
    oEbmlId id;
    int64_t pos;
 };
-typedef struct oEbmlMarker oEbmlMarker;
+typedef struct oEbmlBuilderMarker oEbmlBuilderMarker;
 
 /*******************************************************************************
  generated
 *******************************************************************************/
 
 SLICE_DEF_C_(
-   oEbmlMarker,            // Type
-   oEbmlMarkerSlice,       // SliceType
-   ebml_marker_slice_o,    // FuncName
-   oVarEbmlMarkerSlice,    // VarSliceType
-   var_ebml_marker_slice_o // VarFuncName
+   oEbmlBuilderMarker,              // Type
+   oEbmlBuilderMarkerSlice,         // SliceType
+   ebml_builder_marker_slice_o,     // FuncName
+   oVarEbmlBuilderMarkerSlice,      // VarSliceType
+   var_ebml_builder_marker_slice_o  // VarFuncName
 )
 
 STACK_DEF_C_(
-   oEbmlMarker,         // Type
-   oEbmlMarkerStack,    // StackType
-   ebml_marker_o,       // FuncSuffix
-   ebml_marker_stack_o  // StackFuncSuffix
+   oEbmlBuilderMarker,           // Type
+   oEbmlBuilderMarkerStack,      // StackType
+   ebml_builder_marker_o,        // FuncSuffix
+   ebml_builder_marker_stack_o   // StackFuncSuffix
 )
 
 /*******************************************************************************
@@ -43,6 +43,6 @@ STACK_DEF_C_(
  marker
 *******************************************************************************/
 
-oEbmlMarker ebml_marker_o( oEbmlId id, int64_t pos );
+oEbmlBuilderMarker ebml_builder_marker_o( oEbmlId id, int64_t pos );
 
 #endif

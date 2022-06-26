@@ -1,4 +1,4 @@
-#include "_/oEbmlMarker.h"
+#include "_/oEbmlBuilderMarker.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -7,18 +7,18 @@
 *******************************************************************************/
 
 SLICE_IMPL_C_(
-   oEbmlMarker,            // Type
-   oEbmlMarkerSlice,       // SliceType
-   ebml_marker_slice_o,    // FuncName
-   oVarEbmlMarkerSlice,    // VarSliceType
-   var_ebml_marker_slice_o // VarFuncName
+   oEbmlBuilderMarker,              // Type
+   oEbmlBuilderMarkerSlice,         // SliceType
+   ebml_builder_marker_slice_o,     // FuncName
+   oVarEbmlBuilderMarkerSlice,      // VarSliceType
+   var_ebml_builder_marker_slice_o  // VarFuncName
 )
 
 STACK_IMPL_C_(
-   oEbmlMarker,         // Type
-   oEbmlMarkerStack,    // StackType
-   ebml_marker_o,       // FuncSuffix
-   ebml_marker_stack_o  // StackFuncSuffix
+   oEbmlBuilderMarker,           // Type
+   oEbmlBuilderMarkerStack,      // StackType
+   ebml_builder_marker_o,        // FuncSuffix
+   ebml_builder_marker_stack_o   // StackFuncSuffix
 )
 
 /*******************************************************************************
@@ -27,7 +27,7 @@ STACK_IMPL_C_(
  init
 *******************************************************************************/
 
-oEbmlMarker ebml_marker_o( oEbmlId id, int64_t pos )
+oEbmlBuilderMarker ebml_builder_marker_o( oEbmlId id, int64_t pos )
 {
-   return (oEbmlMarker){ .id=id, .pos=pos };
+   return (oEbmlBuilderMarker){ .id=id, .pos=pos };
 }
