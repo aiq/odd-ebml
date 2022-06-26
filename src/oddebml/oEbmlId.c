@@ -122,6 +122,29 @@ oEbmlId invalid_ebml_id_o( void )
  io
 *******************************************************************************/
 
+static cBytes const checkBytes = slice_c_( cByte, 0x80, 0x40, 0x20, 0x10 );
+
+bool fread_ebml_id_o( FILE* f, oEbmlId id[static 1] )
+{
+   must_exist_c_( f );
+
+   cVarBytes buf = scalars_c_( 4, cByte );
+   cBytes bytes = vint_fread_o( f, buf, checkBytes );
+   if ( is_invalid_c_( bytes ) ) return false;
+
+   cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
+   return scan_ebml_id_o( sca, id );
+}
+
+bool fwrite_ebml_id_o( FILE* f, oEbmlId id )
+{
+   must_exist_c_( f );
+
+   cRecorder* rec = &recorder_c_( 4 );
+   return record_ebml_id_o( rec, id ) and
+      fwrite_bytes_c( f, recorded_bytes_c( rec ) );
+}
+
 bool on_ebml_id_o( cScanner sca[static 1], oEbmlId id )
 {
    cScanner* tmpSca = &scanner_copy_c_( sca );
@@ -156,7 +179,6 @@ bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] )
    }
 
    cByte const* first = sca->mem;
-   cBytes checkBytes = slice_c_( cByte, 0x80, 0x40, 0x20, 0x10 );
    cBytes idBytes = view_bytes_c( sca, vint_scan_size_o( *first, checkBytes ) );
    if ( is_empty_c_( idBytes ) )
    {

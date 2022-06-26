@@ -71,6 +71,10 @@ ODDEBML_API oEbmlId invalid_ebml_id_o( void );
  io
 *******************************************************************************/
 
+ODDEBML_API bool fread_ebml_id_o( FILE* f, oEbmlId id[static 1] );
+
+ODDEBML_API bool fwrite_ebml_id_o( FILE* f, oEbmlId id );
+
 ODDEBML_API bool on_ebml_id_o( cScanner sca[static 1], oEbmlId id );
 
 ODDEBML_API bool record_ebml_id_o( cRecorder rec[static 1], oEbmlId id );
