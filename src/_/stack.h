@@ -73,15 +73,6 @@ bool FuncName( StackType stack[static 1], Type val[static 1] )                 \
    return true;                                                                \
 }
 
-#define TOP_STACK_O_( FuncName, StackType, Type )                              \
-bool FuncName( StackType stack[static 1], Type val[static 1] )                 \
-{                                                                              \
-   if ( is_empty_c_( *stack ) ) return false;                                  \
-                                                                               \
-   *val = last_c_( *stack );                                                   \
-   return true;                                                                \
-}
-
 /*******************************************************************************
  type
 *******************************************************************************/
@@ -99,8 +90,7 @@ bool alloc_##StackFuncSuffix( StackType stack[static 1], int64_t size );       \
 bool realloc_##StackFuncSuffix( StackType stack[static 1], int64_t size );     \
 void free_##StackFuncSuffix( StackType stack[static 1] );                      \
 bool push_##FuncSuffix( StackType stack[static 1], Type val );                 \
-bool pop_##FuncSuffix( StackType stack[static 1], Type val[static 1] );        \
-bool top_##FuncSuffix( StackType stack[static 1], Type val[static 1] );
+bool pop_##FuncSuffix( StackType stack[static 1], Type val[static 1] );
 
 /**********************************************************/
 
@@ -109,8 +99,7 @@ ALLOC_STACK_O_( alloc_##StackFuncSuffix, StackType, Type )                     \
 REALLOC_STACK_O_( realloc_##StackFuncSuffix, StackType, Type )                 \
 FREE_STACK_O_( free_##StackFuncSuffix, StackType )                             \
 PUSH_STACK_O_( push_##FuncSuffix, StackType, Type, realloc_##StackFuncSuffix ) \
-POP_STACK_O_( pop_##FuncSuffix, StackType, Type )                              \
-TOP_STACK_O_( top_##FuncSuffix, StackType, Type )
+POP_STACK_O_( pop_##FuncSuffix, StackType, Type )
 
 /*******************************************************************************
 
