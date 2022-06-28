@@ -12,6 +12,8 @@ set( INC_FILES
    ${INC_DIR}/oddebml/oEbmlElement.h
    ${INC_DIR}/oddebml/oEbmlHeader.h
    ${INC_DIR}/oddebml/oEbmlId.h
+   ${INC_DIR}/oddebml/OEbmlIndex.h
+   ${INC_DIR}/oddebml/oEbmlMarker.h
    ${INC_DIR}/oddebml/OEbmlParser.h
    ${INC_DIR}/oddebml/OEbmlSchema.h
    ${INC_DIR}/oddebml/oEbmlSize.h
@@ -24,7 +26,7 @@ set( SRC_FILES
    ${SRC_DIR}/_/misc.c
    ${SRC_DIR}/_/oEbmlBuilderMarker.c
    ${SRC_DIR}/_/oEbmlElementStack.c
-   ${SRC_DIR}/_/OEbmlSchemaMisc.c
+   ${SRC_DIR}/_/OMisc.c
 
    ${SRC_DIR}/oddebml/error.c
    ${SRC_DIR}/oddebml/o_EbmlType.c
@@ -34,6 +36,8 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/oEbmlElement.c
    ${SRC_DIR}/oddebml/oEbmlHeader.c
    ${SRC_DIR}/oddebml/oEbmlId.c
+   ${SRC_DIR}/oddebml/OEbmlIndex.c
+   ${SRC_DIR}/oddebml/oEbmlMarker.c
    ${SRC_DIR}/oddebml/OEbmlParser.c
    ${SRC_DIR}/oddebml/OEbmlSchema.c
    ${SRC_DIR}/oddebml/oEbmlSize.c

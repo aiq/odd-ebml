@@ -1,6 +1,6 @@
 #include "oddebml/OEbmlSchema.h"
 
-#include "_/OEbmlSchemaMisc.h"
+#include "_/OMisc.h"
 #include "clingo/container/CInt64Map.h"
 
 /*******************************************************************************
@@ -19,7 +19,7 @@ static inline void cleanup( void* instance )
 {
    OEbmlSchema* schema = instance;
 
-   if ( schema->map != NULL )
+   if ( schema->map )
    {
       uint32_t const* key;
       oEbmlDeclStack* stack;
@@ -32,7 +32,7 @@ static inline void cleanup( void* instance )
       }
       release_c( schema->map );
    }
-   if ( schema->parents != NULL )
+   if ( schema->parents )
    {
       release_c( schema->parents );
    }
@@ -101,10 +101,7 @@ OEbmlSchema* new_ebml_schema_o( void )
 {
    cObjectInfo const info = default_object_info_c_( &O_EbmlSchemaMeta );
    OEbmlSchema* result = alloc_object_c_( OEbmlSchema, &info );
-   if ( result == NULL )
-   {
-      return NULL;
-   }
+   if ( result == NULL ) return NULL;
 
    result->map = new_schema_map_o();
    result->parents = new_int64_map_c();
