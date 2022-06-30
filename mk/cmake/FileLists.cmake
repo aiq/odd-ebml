@@ -66,3 +66,10 @@ set( TEST_FILES
    ${TEST_DIR}/oddebml/oEbmlSize/record_ebml_size.c
    ${TEST_DIR}/oddebml/oEbmlSize/scan_ebml_size.c
 )
+
+################################################################################
+# BIN_FILES
+################################################################################
+set( BIN_FILES
+   ${BIN_DIR}/ebml-navi.c
+)
