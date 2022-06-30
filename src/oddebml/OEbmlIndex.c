@@ -69,7 +69,7 @@ static FIND_VAL_C_(
 )
 
 OEbmlIndex* build_ebml_index_o( FILE* file,
-                                oEbmlIdSlice masters,
+                                OEbmlDeclMap const* declMap,
                                 oEbmlIdSlice toMark,
                                 cErrorStack es[static 1] )
 {
@@ -93,7 +93,7 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
          ok = fread_next_ebml_marker_o( file, marker.size, &marker );
       }
 
-      freadCurr = find_ebml_id_o( masters, marker.id ) != NULL;
+      freadCurr = get_from_ebml_decl_map_o( declMap, marker.id ) != NULL;
 
       if ( find_ebml_id_o( toMark, marker.id ) != NULL )
       {

@@ -30,8 +30,6 @@ typedef struct oEbmlDeclSlice oEbmlDeclSlice;
 
 *******************************************************************************/
 
-ODDEBML_API extern oEbmlDecl const O_EbmlRoot;
-
 ODDEBML_API extern oEbmlDecl const O_Ebml;
 ODDEBML_API extern oEbmlDecl const O_EbmlVersion;
 ODDEBML_API extern oEbmlDecl const O_EbmlReadVersion;
@@ -41,6 +39,9 @@ ODDEBML_API extern oEbmlDecl const O_EbmlMaxSizeLength;
 ODDEBML_API extern oEbmlDecl const O_EbmlDocType;
 ODDEBML_API extern oEbmlDecl const O_EbmlDocTypeVersion;
 ODDEBML_API extern oEbmlDecl const O_EbmlDocTypeReadVersion;
+
+ODDEBML_API extern oEbmlDecl const O_EbmlCrc32;
+ODDEBML_API extern oEbmlDecl const O_EbmlVoid;
 
 ODDEBML_API extern oEbmlDecl const O_EbmlSignatureSlot;
 ODDEBML_API extern oEbmlDecl const O_EbmlSignatureAlgo;
@@ -67,6 +68,8 @@ ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
       .type=(Type)                                                             \
    }                                                                           \
 )
+
+ODDEBML_API oEbmlDeclSlice ebml_header_decl_o( void );
 
 ODDEBML_API bool write_ebml_decl_o( cRecorder rec[static 1],
                                     oEbmlDecl const decl[static 1],

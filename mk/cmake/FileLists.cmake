@@ -9,13 +9,13 @@ set( INC_FILES
    ${INC_DIR}/oddebml/OEbmlBuilder.h
    ${INC_DIR}/oddebml/oEbmlDate.h
    ${INC_DIR}/oddebml/oEbmlDecl.h
+   ${INC_DIR}/oddebml/OEbmlDeclMap.h
    ${INC_DIR}/oddebml/oEbmlElement.h
    ${INC_DIR}/oddebml/oEbmlHeader.h
    ${INC_DIR}/oddebml/oEbmlId.h
    ${INC_DIR}/oddebml/OEbmlIndex.h
    ${INC_DIR}/oddebml/oEbmlMarker.h
    ${INC_DIR}/oddebml/OEbmlParser.h
-   ${INC_DIR}/oddebml/OEbmlSchema.h
    ${INC_DIR}/oddebml/oEbmlSize.h
 )
 
@@ -33,13 +33,13 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/OEbmlBuilder.c
    ${SRC_DIR}/oddebml/oEbmlDate.c
    ${SRC_DIR}/oddebml/oEbmlDecl.c
+   ${SRC_DIR}/oddebml/OEbmlDeclMap.c
    ${SRC_DIR}/oddebml/oEbmlElement.c
    ${SRC_DIR}/oddebml/oEbmlHeader.c
    ${SRC_DIR}/oddebml/oEbmlId.c
    ${SRC_DIR}/oddebml/OEbmlIndex.c
    ${SRC_DIR}/oddebml/oEbmlMarker.c
    ${SRC_DIR}/oddebml/OEbmlParser.c
-   ${SRC_DIR}/oddebml/OEbmlSchema.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
 )
 
@@ -58,8 +58,6 @@ set( TEST_FILES
    ${TEST_DIR}/oddebml/oEbmlId/encode_ebml_id.c
    ${TEST_DIR}/oddebml/oEbmlId/record_ebml_id.c
    ${TEST_DIR}/oddebml/oEbmlId/scan_ebml_id.c
-   # OEbmlSchema
-   ${TEST_DIR}/oddebml/OEbmlSchema/iterate_ebml_schema.c
    # oEbmlSize
    ${TEST_DIR}/oddebml/oEbmlSize/decode_ebml_size.c
    ${TEST_DIR}/oddebml/oEbmlSize/ebml_size_is_unknown.c

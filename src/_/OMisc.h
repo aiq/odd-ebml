@@ -13,15 +13,6 @@ STACK_DEF_C_(
    ebml_decl_stack_o // StackFuncSuffix
 )
 
-VAL_VAL_MAP_DEF_C_(
-   ,                 // LibApi
-   OSchemaMap,       // MapType
-   uint32_t,         // KeyType
-   oEbmlDeclStack,   // ValType
-   schema_map_o,     // FuncName
-   O_SchemaMapMeta   // Meta
-)
-
 STACK_DEF_C_(
    oEbmlMarker,         // Type
    oEbmlMarkerStack,    // StackType

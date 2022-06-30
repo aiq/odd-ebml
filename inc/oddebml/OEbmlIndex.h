@@ -3,8 +3,8 @@
 
 #include "clingo/lang/CObject.h"
 #include "oddebml/apidecl.h"
+#include "oddebml/OEbmlDeclMap.h"
 #include "oddebml/oEbmlMarker.h"
-#include "oddebml/OEbmlSchema.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -26,7 +26,7 @@ typedef struct OEbmlIndex OEbmlIndex;
 ODDEBML_API OEbmlIndex* new_ebml_index_o( void );
 
 ODDEBML_API OEbmlIndex* build_ebml_index_o( FILE* file,
-                                            oEbmlIdSlice masters,
+                                            OEbmlDeclMap const* schema,
                                             oEbmlIdSlice toMark,
                                             cErrorStack es[static 1] );
 
