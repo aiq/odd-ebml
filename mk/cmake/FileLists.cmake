@@ -15,7 +15,6 @@ set( INC_FILES
    ${INC_DIR}/oddebml/oEbmlId.h
    ${INC_DIR}/oddebml/OEbmlIndex.h
    ${INC_DIR}/oddebml/oEbmlMarker.h
-   ${INC_DIR}/oddebml/OEbmlParser.h
    ${INC_DIR}/oddebml/oEbmlSize.h
 )
 
@@ -39,7 +38,6 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/oEbmlId.c
    ${SRC_DIR}/oddebml/OEbmlIndex.c
    ${SRC_DIR}/oddebml/oEbmlMarker.c
-   ${SRC_DIR}/oddebml/OEbmlParser.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
 )
 
