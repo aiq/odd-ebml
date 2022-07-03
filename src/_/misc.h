@@ -30,6 +30,8 @@ inline cBytes vint_fread_o( FILE* f, cVarBytes buf, cBytes checkBytes )
    buf.v[0] = first;
    buf.s = size;
    cBytes res = as_bytes_c( buf );
+   if ( res.s == 1 ) return res;
+
    buf = mid_var_bytes_c( buf, 1 );
    if ( not fread_bytes_c( f, &buf ) ) return (cBytes)invalid_slice_c_();
 
