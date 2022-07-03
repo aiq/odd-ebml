@@ -1,11 +1,24 @@
 #include "oddebml/error.h"
 
 /*******************************************************************************
+********************************************************* Types and Definitions
+**+*****************************************************************************
+ Definitions
+*******************************************************************************/
+
+static bool note_ebml_error_c( cRecorder rec[static 1], cError const* err )
+{
+   must_be_c_( err->type == &C_EbmlError );
+   return record_chars_c_( rec, "oddebml error" );
+}
+
+cErrorType const C_EbmlError = {
+   .desc = stringify_c_( C_EbmlError ),
+   .note = &note_ebml_error_c
+};
+
+/*******************************************************************************
 ********************************************************************* Functions
 ********************************************************************************
 
-CLINGO_API bool push_ebml_schema_error_c( cErrorStack es[static 1],
-                                          OEbmlSchema const*  );
 *******************************************************************************/
-
-CLINGO_API bool note_ebml_error_c( cRecorder rec[static 1], cError const* err );
