@@ -56,4 +56,32 @@ ODDEBML_API bool fread_ebml_bytes_o( FILE* f,
                                      oEbmlMarker const from[static 1],
                                      cVarBytes buf[static 1] );
 
+/*******************************************************************************
+
+*******************************************************************************/
+
+ODDEBML_API bool fread_ebml_int_o( FILE* f,
+                                   oEbmlMarker const from[static 1],
+                                   int64_t val[static 1] );
+
+ODDEBML_API bool fread_ebml_uint_o( FILE* f,
+                                    oEbmlMarker const from[static 1],
+                                    uint64_t val[static 1] );
+
+ODDEBML_API bool fread_ebml_float_o( FILE* f,
+                                     oEbmlMarker const from[static 1],
+                                     double val[static 1] );
+
+ODDEBML_API bool fread_ebml_string_o( FILE* f,
+                                      oEbmlMarker const from[static 1],
+                                      cVarChars val[static 1] );
+
+ODDEBML_API bool fread_ebml_utf8_o( FILE* f,
+                                    oEbmlMarker const from[static 1],
+                                    cVarChars val[static 1] );
+
+ODDEBML_API bool fread_ebml_date_o( FILE* f,
+                                    oEbmlMarker const from[static 1],
+                                    oEbmlDate date[static 1] );
+
 #endif
