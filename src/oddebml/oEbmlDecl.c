@@ -8,6 +8,18 @@
 
 *******************************************************************************/
 
+SLICE_IMPL_C_(
+   oEbmlDecl,              // Type
+   oEbmlDeclSlice,         // SliceType
+   ebml_decl_slice_c,      // FuncName
+   oVarEbmlDeclSlice,      // VarSliceType
+   var_ebml_decl_slice_c   // VarFuncName
+)
+
+/*******************************************************************************
+
+*******************************************************************************/
+
 #define oEBML_HEADER_DECL_LIST_                                                \
    XMAP_C_( O_Ebml,                    "EBML",                 0x1A45DFA3, 1, 1, o_EbmlMaster ) \
    XMAP_C_( O_EbmlVersion,             "EBMLVersion",          0x4286,     1, 1, o_EbmlUint ) \
@@ -43,23 +55,26 @@ oEBML_HEADER_DECL_LIST_;
 
 *******************************************************************************/
 
-oEbmlDeclSlice ebml_header_decl_o( void )
+oEbmlDeclSlice get_ebml_header_decl_o( oVarEbmlDeclSlice buf )
 {
-   static oEbmlDeclSlice res = invalid_slice_c_();
-   if ( is_invalid_c_( res ) )
+   oEbmlDeclSlice src = slice_c_( oEbmlDecl,
+      O_Ebml, O_EbmlVersion, O_EbmlReadVersion,
+      O_EbmlMaxIdLength, O_EbmlMaxSizeLength,
+      O_EbmlDocType, O_EbmlDocTypeVersion, O_EbmlDocTypeReadVersion,
+      O_EbmlCrc32, O_EbmlVoid,
+      O_EbmlSignatureSlot, O_EbmlSignatureAlgo, O_EbmlSignatureHash, 
+      O_EbmlSignaturePublicKey, O_EbmlSignature,
+      O_EbmlSignatureElements,
+      O_EbmlSignatureElementList, O_EbmlSignedElement
+   );
+
+   buf.s = set_ebml_decl_slice_c( buf, src );
+   if ( buf.s != src.s )
    {
-      res = (oEbmlDeclSlice)slice_c_( oEbmlDecl,
-         O_Ebml, O_EbmlVersion, O_EbmlReadVersion,
-         O_EbmlMaxIdLength, O_EbmlMaxSizeLength,
-         O_EbmlDocType, O_EbmlDocTypeVersion, O_EbmlDocTypeReadVersion,
-         O_EbmlCrc32, O_EbmlVoid,
-         O_EbmlSignatureSlot, O_EbmlSignatureAlgo, O_EbmlSignatureHash, 
-         O_EbmlSignaturePublicKey, O_EbmlSignature,
-         O_EbmlSignatureElements,
-         O_EbmlSignatureElementList, O_EbmlSignedElement
-      );
+      return (oEbmlDeclSlice)invalid_slice_c_();
    }
-   return res;
+
+   return as_ebml_decl_slice_c( buf );
 }
 
 bool write_ebml_decl_o( cRecorder rec[static 1],
