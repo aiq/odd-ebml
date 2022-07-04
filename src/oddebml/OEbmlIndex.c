@@ -2,6 +2,7 @@
 
 #include "_/OMisc.h"
 #include "clingo/io/FILE.h"
+#include "oddebml/oEbmlFileTrav.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -79,25 +80,25 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
       return NULL;
    }
 
-   oEbmlMarker marker;
+   oEbmlFileTrav* trav = &start_ebml_file_trav_o_( file );
    bool ok = true;
    bool freadCurr = false;
    while ( ok )
    {
       if ( freadCurr )
       {
-         ok = fread_curr_ebml_marker_o( file, &marker );
+         ok = visit_adj_ebml_marker_o( trav );
       }
       else
       {
-         ok = fread_next_ebml_marker_o( file, marker.size, &marker );
+         ok = visit_next_ebml_marker_o( trav );
       }
 
-      freadCurr = get_from_ebml_decl_map_o( declMap, marker.id ) != NULL;
+      freadCurr = get_from_ebml_decl_map_o( declMap, trav->marker.id ) != NULL;
 
-      if ( find_ebml_id_o( toMark, marker.id ) != NULL )
+      if ( find_ebml_id_o( toMark, trav->marker.id ) != NULL )
       {
-         ok = attach_ebml_marker_o( index, &marker );
+         ok = attach_ebml_marker_o( index, &(trav->marker) );
       }
    }
    if ( ferror( file ) != 0 )

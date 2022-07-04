@@ -3,6 +3,7 @@
 #include "clingo/io/print.h"
 #include "oddebml/oEbmlDecl.h"
 #include "oddebml/OEbmlDeclMap.h"
+#include "oddebml/oEbmlFileTrav.h"
 #include "oddebml/oEbmlMarker.h"
 
 #include "mkvdecl.h"
@@ -46,10 +47,10 @@ static bool navi( FILE* file, OEbmlDeclMap* map )
 {
    println_c_( "\ncommands -> {s}\n", commands );
 
-   oEbmlMarker marker;
+   oEbmlFileTrav* trav = &start_ebml_file_trav_o_( file );
    oEbmlDecl const* decl;
-   if ( not fread_curr_ebml_marker_o( file, &marker ) ) return feof( file );
-   if ( not handle_decl( map, &marker, &decl ) ) return false;
+   if ( not visit_adj_ebml_marker_o( trav ) ) return feof( file );
+   if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
 
    cVarChars line = scalars_c_( 248, char );
    bool fin = true;
@@ -64,8 +65,8 @@ static bool navi( FILE* file, OEbmlDeclMap* map )
       }
       else if ( chars_is_c( inp, "n" ) )
       {
-         if ( not fread_ebml_sibling_marker_o( file, &marker, &marker ) ) return feof( file );
-         if ( not handle_decl( map, &marker, &decl ) ) return false;
+         if ( not visit_next_ebml_marker_o( trav ) ) return feof( file );
+         if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
       }
       else if ( chars_is_c( inp, "c" ) )
       {
@@ -74,8 +75,8 @@ static bool navi( FILE* file, OEbmlDeclMap* map )
             println_c_( "[c] works only on master elements" );
             continue;
          }
-         if ( not fread_ebml_child_marker_o( file, &marker, &marker ) ) return feof( file );
-         if ( not handle_decl( map, &marker, &decl ) ) return false;
+         if ( not visit_adj_ebml_marker_o( trav ) ) return feof( file );
+         if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
       }
       else if ( chars_is_c( inp, "q" ) )
       {
@@ -120,7 +121,7 @@ int main( int argc, char* argv[] )
       return EXIT_FAILURE;
    }
 
-   println_c_( "bye bye" );
+   println_c_( "bye bye {cs:Q}", filePath );
    if ( not close_file_c( file, es ) )
    {
       println_c_( "not able to close file {cs:Q}: {e}", filePath, es->err );
