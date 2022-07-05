@@ -2,7 +2,7 @@
 
 #include "_/OMisc.h"
 #include "clingo/io/FILE.h"
-#include "oddebml/oEbmlFileTrav.h"
+#include "oddebml/oEbmlTrav.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -80,7 +80,7 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
       return NULL;
    }
 
-   oEbmlFileTrav* trav = &start_ebml_file_trav_o_( file );
+   oEbmlTrav* trav = &start_ebml_trav_o_( file );
    bool ok = true;
    bool freadCurr = false;
    while ( ok )

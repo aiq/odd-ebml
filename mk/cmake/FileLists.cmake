@@ -71,5 +71,5 @@ set( TEST_FILES
 # BIN_FILES
 ################################################################################
 set( BIN_FILES
-   ${BIN_DIR}/ebml-navi.c
+   ${BIN_DIR}/ebml-navi/ebml-navi.c
 )

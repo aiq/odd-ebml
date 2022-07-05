@@ -27,6 +27,10 @@ bool ebml_as_int_o( oEbmlElement const elem[static 1],
    cRecorder* rec = &recorder_c_( 8 );
    record_pad_c( rec, char_c_( fillByte ), 8 - bin.s );
    record_bytes_c( rec, bin );
+   reset_recorder_c( rec );
+
+   int64_t const* beVal = rec->mem;
+   *val = swap_int64_from_c( *beVal, c_BigEndian );
 	return true;
 }
 
@@ -45,6 +49,10 @@ bool ebml_as_uint_o( oEbmlElement const elem[static 1],
    cRecorder* rec = &recorder_c_( 8 );
    record_pad_c( rec, 0x00, 8 - bin.s );
    record_bytes_c( rec, bin );
+   reset_recorder_c( rec );
+
+   uint64_t const* beVal = rec->mem;
+   *val = swap_uint64_from_c( *beVal, c_BigEndian );
 	return true;
 }
 

@@ -10,6 +10,29 @@
 
 *******************************************************************************/
 
+int cmp_ebml_marker_o( oEbmlMarker const a[static 1],
+                       oEbmlMarker const b[static 1] )
+{
+   if ( a->pos < b->pos )
+   {
+      return -1;
+   }
+   else if ( a->pos > b->pos )
+   {
+      return 1;
+   }
+   return 0;
+}
+
+bool ebml_marker_covers_o( oEbmlMarker const marker[static 1],
+                           oEbmlMarker const oth[static 1] )
+{
+   cRange markerRng = sized_range_c_( marker->pos, marker->size );
+   cRange othRng = sized_range_c_( oth->pos, oth->size );
+   return in_range_c( markerRng, othRng.min ) and
+          in_range_c( markerRng, othRng.max );
+}
+
 bool fread_ebml_marker_o( FILE* f, oEbmlMarker marker[static 1] )
 {
    must_exist_c_( f );
@@ -28,27 +51,4 @@ bool fread_ebml_marker_o( FILE* f, oEbmlMarker marker[static 1] )
    marker->pos = pos;
 
    return true;
-}
-
-bool fread_ebml_child_marker_o( FILE* f,
-                                oEbmlMarker const from[static 1],
-                                oEbmlMarker marker[static 1] )
-{
-   must_exist_c_( f );
-
-   if ( fsetpos( f, &(from->pos) ) != 0 ) return false;
-
-   return fread_ebml_marker_o( f, marker );
-}
-
-bool fread_ebml_sibling_marker_o( FILE* f,
-                                  oEbmlMarker const from[static 1],
-                                  oEbmlMarker marker[static 1] )
-{
-   must_exist_c_( f );
-
-   fpos_t next = from->pos + from->size;
-   if ( fsetpos( f, &next ) != 0 ) return false;
-
-   return fread_ebml_marker_o( f, marker );
 }

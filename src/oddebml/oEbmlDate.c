@@ -66,6 +66,16 @@ extern inline bool eq_ebml_date_c( oEbmlDate a, oEbmlDate b );
  io
 *******************************************************************************/
 
+bool read_ebml_date_o( cScanner sca[static 1],
+                       oEbmlDate date[static 1],
+                       char const fmt[static 1] )
+{
+   cTime t;
+   if ( not read_time_c( sca, &t, fmt ) ) return false;
+   *date = as_ebml_date_o( t );
+   return true;
+}
+
 bool record_ebml_date_o( cRecorder rec[static 1], oEbmlDate date )
 {
    int64_t raw = swap_int64_to_c( date._v, c_BigEndian );
@@ -79,4 +89,12 @@ bool scan_ebml_date_o( cScanner sca[static 1], oEbmlDate date[static 1] )
 
    date->_v = swap_int64_from_c( i64, c_BigEndian );
    return true;
+}
+
+bool write_ebml_date_o( cRecorder rec[static 1],
+                        oEbmlDate date,
+                        char const fmt[static 1] )
+{
+   cTime t = from_ebml_date_o( date );
+   return write_time_c( rec, t, fmt );
 }

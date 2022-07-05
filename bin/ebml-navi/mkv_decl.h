@@ -1,3 +1,6 @@
+#ifndef EBML_NAVI_MKV_DECL_H
+#define EBML_NAVI_MKV_DECL_H
+
 #include "oddebml/oEbmlDecl.h"
 
 #define EBML_MKV_DECL_LIST_ \
@@ -528,3 +531,5 @@ static oEbmlDeclSlice get_ebml_mkv_decl( oVarEbmlDeclSlice buf )
 
    return as_ebml_decl_slice_c( buf );
 }
+
+#endif

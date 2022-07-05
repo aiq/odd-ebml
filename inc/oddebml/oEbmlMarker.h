@@ -35,17 +35,13 @@ typedef struct oEbmlMarkerSlice oEbmlMarkerSlice;
 
 *******************************************************************************/
 
+ODDEBML_API int cmp_ebml_marker_o( oEbmlMarker const a[static 1],
+                                   oEbmlMarker const b[static 1] );
+
+ODDEBML_API bool ebml_marker_covers_o( oEbmlMarker const marker[static 1],
+                                       oEbmlMarker const oth[static 1] );
+
 ODDEBML_API bool fread_ebml_marker_o( FILE* f,
                                       oEbmlMarker marker[static 1] );
-
-ODDEBML_API
-bool fread_ebml_child_marker_o( FILE* f,
-                                oEbmlMarker const from[static 1],
-                                oEbmlMarker marker[static 1] );
-
-ODDEBML_API
-bool fread_ebml_sibling_marker_o( FILE* f,
-                                  oEbmlMarker const from[static 1],
-                                  oEbmlMarker marker[static 1] );
 
 #endif
