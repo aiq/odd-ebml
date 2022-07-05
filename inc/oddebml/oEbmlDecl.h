@@ -31,6 +31,8 @@ SLICE_DEF_C_(
 
 *******************************************************************************/
 
+ODDEBML_API extern oEbmlDecl const O_EbmlRoot;
+
 ODDEBML_API extern oEbmlDecl const O_Ebml;
 ODDEBML_API extern oEbmlDecl const O_EbmlVersion;
 ODDEBML_API extern oEbmlDecl const O_EbmlReadVersion;

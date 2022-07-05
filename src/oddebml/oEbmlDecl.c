@@ -21,6 +21,8 @@ SLICE_IMPL_C_(
 *******************************************************************************/
 
 #define oEBML_HEADER_DECL_LIST_                                                \
+   XMAP_C_( O_EbmlRoot, "EBMLRoot", 0x00, 1, 1, o_EbmlMaster ) \
+   \
    XMAP_C_( O_Ebml,                    "EBML",                 0x1A45DFA3, 1, 1, o_EbmlMaster ) \
    XMAP_C_( O_EbmlVersion,             "EBMLVersion",          0x4286,     1, 1, o_EbmlUint ) \
    XMAP_C_( O_EbmlReadVersion,         "EBMLReadVersion",      0x42F7,     1, 1, o_EbmlUint ) \
