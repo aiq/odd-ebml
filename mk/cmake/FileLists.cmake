@@ -11,12 +11,12 @@ set( INC_FILES
    ${INC_DIR}/oddebml/oEbmlDecl.h
    ${INC_DIR}/oddebml/OEbmlDeclMap.h
    ${INC_DIR}/oddebml/oEbmlElement.h
-   ${INC_DIR}/oddebml/oEbmlFileTrav.h
    ${INC_DIR}/oddebml/oEbmlHeader.h
    ${INC_DIR}/oddebml/oEbmlId.h
    ${INC_DIR}/oddebml/OEbmlIndex.h
    ${INC_DIR}/oddebml/oEbmlMarker.h
    ${INC_DIR}/oddebml/oEbmlSize.h
+   ${INC_DIR}/oddebml/oEbmlTrav.h
 )
 
 ################################################################################
@@ -35,12 +35,12 @@ set( SRC_FILES
    ${SRC_DIR}/oddebml/oEbmlDecl.c
    ${SRC_DIR}/oddebml/OEbmlDeclMap.c
    ${SRC_DIR}/oddebml/oEbmlElement.c
-   ${SRC_DIR}/oddebml/oEbmlFileTrav.c
    ${SRC_DIR}/oddebml/oEbmlHeader.c
    ${SRC_DIR}/oddebml/oEbmlId.c
    ${SRC_DIR}/oddebml/OEbmlIndex.c
    ${SRC_DIR}/oddebml/oEbmlMarker.c
    ${SRC_DIR}/oddebml/oEbmlSize.c
+   ${SRC_DIR}/oddebml/oEbmlTrav.c
 )
 
 ################################################################################

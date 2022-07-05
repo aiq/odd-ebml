@@ -1,4 +1,4 @@
-#include "oddebml/oEbmlFileTrav.h"
+#include "oddebml/oEbmlTrav.h"
 
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlElement.h"
@@ -9,14 +9,14 @@
 
 *******************************************************************************/
 
-bool visit_adj_ebml_marker_o( oEbmlFileTrav trav[static 1] )
+bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1] )
 {
    if ( fsetpos( trav->file, &(trav->marker.pos) ) != 0 ) return false;
 
    return fread_ebml_marker_o( trav->file, &(trav->marker) );
 }
 
-bool visit_next_ebml_marker_o( oEbmlFileTrav trav[static 1] )
+bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1] )
 {
    fpos_t next = trav->marker.pos + trav->marker.size;
    if ( fsetpos( trav->file, &next ) != 0 ) return false;
@@ -28,7 +28,29 @@ bool visit_next_ebml_marker_o( oEbmlFileTrav trav[static 1] )
 
 *******************************************************************************/
 
-bool fread_ebml_bytes_o( oEbmlFileTrav trav[static 1],
+bool visit_ebml_child_o( oEbmlTrav const master[static 1],
+                         oEbmlTrav child[static 1] )
+{
+   must_be_c_( master->file == child->file );
+
+   if ( not ebml_marker_covers_o( &(master->marker), &(child->marker) ) )
+      return false;
+
+   if ( master->marker.pos == child->marker.pos )
+   {
+      return visit_adj_ebml_marker_o( child ) and
+             ebml_marker_covers_o( &(master->marker), &(child->marker) );
+   }
+
+   return visit_next_ebml_marker_o( child ) and
+          ebml_marker_covers_o( &(master->marker), &(child->marker) );
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+bool fread_ebml_bytes_o( oEbmlTrav trav[static 1],
                          cVarBytes buf[static 1] )
 {
    if ( trav->marker.size == 0 )
@@ -45,7 +67,7 @@ bool fread_ebml_bytes_o( oEbmlFileTrav trav[static 1],
    return fread_bytes_c( trav->file, buf );
 }
 
-bool fread_ebml_int_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_int_o( oEbmlTrav trav[static 1],
                        int64_t val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
@@ -57,7 +79,7 @@ bool fread_ebml_int_o( oEbmlFileTrav trav[static 1],
    return ebml_as_int_o( &elem, val );
 }
 
-bool fread_ebml_uint_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_uint_o( oEbmlTrav trav[static 1],
                         uint64_t val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
@@ -69,7 +91,7 @@ bool fread_ebml_uint_o( oEbmlFileTrav trav[static 1],
    return ebml_as_uint_o( &elem, val );
 }
 
-bool fread_ebml_float_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_float_o( oEbmlTrav trav[static 1],
                          double val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
@@ -81,7 +103,7 @@ bool fread_ebml_float_o( oEbmlFileTrav trav[static 1],
    return ebml_as_float_o( &elem, val );
 }
 
-bool fread_ebml_string_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_string_o( oEbmlTrav trav[static 1],
                           cVarChars val[static 1] )
 {
    cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
@@ -97,7 +119,7 @@ bool fread_ebml_string_o( oEbmlFileTrav trav[static 1],
    return res;
 }
 
-bool fread_ebml_utf8_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_utf8_o( oEbmlTrav trav[static 1],
                         cVarChars val[static 1] )
 {
    cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
@@ -113,7 +135,7 @@ bool fread_ebml_utf8_o( oEbmlFileTrav trav[static 1],
    return res;
 }
 
-bool fread_ebml_date_o( oEbmlFileTrav trav[static 1],
+bool fread_ebml_date_o( oEbmlTrav trav[static 1],
                         oEbmlDate val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
