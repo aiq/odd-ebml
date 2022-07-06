@@ -1,8 +1,33 @@
 #include "oddebml/OEbmlIndex.h"
 
-#include "_/OMisc.h"
+#include "_/stack.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlTrav.h"
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+STATIC_STACK_IMPL_C_(
+   __attribute__((unused)),   // Attr
+   oEbmlMarker,         // Type
+   oEbmlMarkerStack,    // StackType
+   ebml_marker_o,       // FuncSuffix
+   ebml_marker_stack_o  // StackFuncSuffix
+)
+
+VAL_VAL_MAP_IMPL_C_(
+   static __attribute__((unused)),                 // Static
+   OIndexMap,        // MapType
+   oIndexRow,        // RowType
+   uint32_t,         // KeyType
+   oEbmlMarkerStack, // ValType
+   index_map_o,      // FuncName
+   O_IndexMapMeta,   // Meta
+   hash_int64_c,     // HashFunc
+   cmp_int64_c,      // CmpFunc
+   do_not_ref_c_     // DoRef
+)
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
