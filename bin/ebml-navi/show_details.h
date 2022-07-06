@@ -1,9 +1,11 @@
 #ifndef EBML_NAVI_SHOW_DETAILS_H
 #define EBML_NAVI_SHOW_DETAILS_H
 
+#include "ctx.h"
+
 static bool show_details( oEbmlTrav trav[static 1],
                           o_EbmlType type,
-                          OEbmlDeclMap* map )
+                          EbmlNaviCtx ctx[static 1] )
 {
    if ( type == o_EbmlInt )
    {
@@ -58,7 +60,7 @@ static bool show_details( oEbmlTrav trav[static 1],
       int64_t i = 1;
       while ( visit_ebml_child_o( trav, &subTrav ) )
       {
-         oEbmlDecl const* decl = get_from_ebml_decl_map_o( map, subTrav.marker.id );
+         oEbmlDecl const* decl = get_from_ebml_decl_map_o( ctx->declMap, subTrav.marker.id );
          if ( decl == NULL )
          {
             println_c_( "{i64:(8r )}. {u32:x} is unknown", i, subTrav.marker.id );

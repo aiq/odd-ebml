@@ -11,6 +11,8 @@ static char const* commands =
    " - [b]ack to master\n"
    " - [q]uit";
 
+
+
 static bool handle_decl( OEbmlDeclMap* map,
                          oEbmlMarker const m[static 1],
                          oEbmlDecl const* declPtr[static 1] )
@@ -29,14 +31,14 @@ static bool handle_decl( OEbmlDeclMap* map,
    return true;
 }
 
-static bool loop( FILE* file, OEbmlDeclMap* map )
+static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
 {
    println_c_( "commands ->\n{s}\n", commands );
 
-   oEbmlTrav* trav = &start_ebml_trav_o_( file );
+   oEbmlTrav* trav = &start_ebml_trav_o_( ctx->file );
    oEbmlDecl const* decl;
-   if ( not visit_adj_ebml_marker_o( trav ) ) return feof( file );
-   if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
+   if ( not visit_adj_ebml_marker_o( trav ) ) return feof( ctx->file );
+   if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) ) return false;
 
    cVarChars line = scalars_c_( 248, char );
    bool fin = true;
@@ -47,16 +49,16 @@ static bool loop( FILE* file, OEbmlDeclMap* map )
       cChars inp = as_chars_c( line );
       if ( chars_is_c( inp, "b" ) )
       {
-         
+
       }
       else if ( chars_is_c( inp, "d" ) )
       {
-         if ( not show_details( trav, decl->type, map ) ) return false;
+         if ( not show_details( trav, decl->type, ctx ) ) return false;
       }
       else if ( chars_is_c( inp, "n" ) )
       {
-         if ( not visit_next_ebml_marker_o( trav ) ) return feof( file );
-         if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
+         if ( not visit_next_ebml_marker_o( trav ) ) return feof( ctx->file );
+         if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) ) return false;
       }
       else if ( chars_is_c( inp, "c" ) )
       {
@@ -65,8 +67,8 @@ static bool loop( FILE* file, OEbmlDeclMap* map )
             println_c_( "[c] works only on master elements" );
             continue;
          }
-         if ( not visit_adj_ebml_marker_o( trav ) ) return feof( file );
-         if ( not handle_decl( map, &(trav->marker), &decl ) ) return false;
+         if ( not visit_adj_ebml_marker_o( trav ) ) return feof( ctx->file );
+         if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) ) return false;
       }
       else if ( chars_is_c( inp, "r" ) )
       {
