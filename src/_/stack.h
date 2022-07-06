@@ -101,6 +101,27 @@ FREE_STACK_O_( free_##StackFuncSuffix, StackType )                             \
 PUSH_STACK_O_( push_##FuncSuffix, StackType, Type, realloc_##StackFuncSuffix ) \
 POP_STACK_O_( pop_##FuncSuffix, StackType, Type )
 
+/**********************************************************/
+
+#define STATIC_STACK_IMPL_C_(                                                  \
+   Attr, Type, StackType, FuncSuffix, StackFuncSuffix                          \
+)                                                                              \
+struct StackType                                                               \
+{                                                                              \
+   int64_t s;                                                                  \
+   Type* v;                                                                    \
+   int64_t cap;                                                                \
+};                                                                             \
+typedef struct StackType StackType;                                            \
+                                                                               \
+static Attr ALLOC_STACK_O_( alloc_##StackFuncSuffix, StackType, Type )         \
+static Attr REALLOC_STACK_O_( realloc_##StackFuncSuffix, StackType, Type )     \
+static Attr FREE_STACK_O_( free_##StackFuncSuffix, StackType )                 \
+static Attr PUSH_STACK_O_(                                                     \
+   push_##FuncSuffix, StackType, Type, realloc_##StackFuncSuffix               \
+)                                                                              \
+static Attr POP_STACK_O_( pop_##FuncSuffix, StackType, Type )
+
 /*******************************************************************************
 
 *******************************************************************************/

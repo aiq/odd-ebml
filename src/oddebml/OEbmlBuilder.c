@@ -1,6 +1,6 @@
 #include "oddebml/OEbmlBuilder.h"
 
-#include "_/oEbmlBuilderMarker.h"
+#include "_/stack.h"
 #include "clingo/io/cRecorder.h"
 #include "clingo/type/double.h"
 #include "clingo/type/float.h"
@@ -12,6 +12,29 @@
 #include "clingo/type/uint16.h"
 #include "clingo/type/uint32.h"
 #include "clingo/type/uint64.h"
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+struct oEbmlBuilderMarker {
+   oEbmlId id;
+   int64_t pos;
+};
+typedef struct oEbmlBuilderMarker oEbmlBuilderMarker;
+
+static inline oEbmlBuilderMarker ebml_builder_marker_o( oEbmlId id, int64_t pos )
+{
+   return (oEbmlBuilderMarker){ .id=id, .pos=pos };
+}
+
+STATIC_STACK_IMPL_C_(
+   __attribute__((unused)),      // Attr
+   oEbmlBuilderMarker,           // Type
+   oEbmlBuilderMarkerStack,      // StackType
+   ebml_builder_marker_o,        // FuncSuffix
+   ebml_builder_marker_stack_o   // StackFuncSuffix
+)
 
 /*******************************************************************************
 ********************************************************* Types and Definitions

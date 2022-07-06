@@ -24,7 +24,6 @@ set( INC_FILES
 ################################################################################
 set( SRC_FILES
    ${SRC_DIR}/_/misc.c
-   ${SRC_DIR}/_/oEbmlBuilderMarker.c
    ${SRC_DIR}/_/oEbmlElementStack.c
    ${SRC_DIR}/_/OMisc.c
 
