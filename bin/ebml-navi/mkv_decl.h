@@ -250,7 +250,7 @@
    XMAP_C_( TagEditionUID, 0x63c9,0,INT64_MAX, o_EbmlUint ) \
    XMAP_C_( TagChapterUID, 0x63c4,0,INT64_MAX, o_EbmlUint ) \
    XMAP_C_( TagAttachmentUID, 0x63c6,0,INT64_MAX, o_EbmlUint ) \
-   XMAP_C_( SimpleTag, 0x63c8,1,INT64_MAX, o_EbmlMaster ) \
+   XMAP_C_( SimpleTag, 0x67c8,1,INT64_MAX, o_EbmlMaster ) \
    XMAP_C_( TagName, 0x45a3,1,1, o_EbmlUtf8 ) \
    XMAP_C_( TagLanguage, 0x447a,1,1, o_EbmlString ) \
    XMAP_C_( TagLanguageIETF, 0x447b,0,1, o_EbmlString ) \

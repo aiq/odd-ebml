@@ -37,16 +37,16 @@ VAL_VAL_MAP_IMPL_C_(
 struct EbmlNaviCtx
 {
    FILE* file;
-   oEbmlMarkerStack markerStack;
+   oEbmlMarkerStack history;
    OEbmlDeclMap* declMap;
 };
 typedef struct EbmlNaviCtx EbmlNaviCtx;
 
-void deinit_ctx( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
+void deref_ctx( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
 {
    if ( ctx->file != NULL ) close_file_c( ctx->file, es );
 
-   if ( ctx->markerStack.v != NULL ) free_ebml_marker_stack_o( &(ctx->markerStack) );
+   if ( ctx->history.v != NULL ) free_ebml_marker_stack_o( &(ctx->history) );
 
    if ( ctx->declMap != NULL ) release_c( ctx->declMap );
 }
@@ -57,15 +57,15 @@ bool init_ctx( EbmlNaviCtx ctx[static 1], cChars filePath, cErrorStack es[static
    ctx->file = ropen_file_c( filePath, es );
    if ( ctx->file == NULL )
    {
-      deinit_ctx( ctx, es );
+      deref_ctx( ctx, es );
       return false;
    }
 
-   if ( not alloc_ebml_marker_stack_o( &(ctx->markerStack), 8 ) )
+   if ( not alloc_ebml_marker_stack_o( &(ctx->history), 24 ) )
    {
       push_errno_error_c( es, ENOMEM );
       push_text_error_c_( es, "not able to allocate ctx.markerStack" );
-      deinit_ctx( ctx, es );
+      deref_ctx( ctx, es );
       return false;
    }
 
@@ -74,7 +74,7 @@ bool init_ctx( EbmlNaviCtx ctx[static 1], cChars filePath, cErrorStack es[static
    {
       push_errno_error_c( es, ENOMEM );
       push_text_error_c_( es, "not able to allocate ctx.declMap" );
-      deinit_ctx( ctx, es );
+      deref_ctx( ctx, es );
       return false;
    }
 

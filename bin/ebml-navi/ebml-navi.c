@@ -44,7 +44,7 @@ int main( int argc, char* argv[] )
    }
 
    println_c_( "bye bye {cs:Q}", filePath );
-   deinit_ctx( &ctx, es );
+   deref_ctx( &ctx, es );
 
    return EXIT_SUCCESS;
 }
