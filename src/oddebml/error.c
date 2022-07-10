@@ -6,16 +6,7 @@
  Definitions
 *******************************************************************************/
 
-static bool note_ebml_error_c( cRecorder rec[static 1], cError const* err )
-{
-   must_be_c_( err->type == &C_EbmlError );
-   return record_chars_c_( rec, "oddebml error" );
-}
-
-cErrorType const C_EbmlError = {
-   .desc = stringify_c_( C_EbmlError ),
-   .note = &note_ebml_error_c
-};
+SINGLE_ERROR_TYPE_C_( O_EbmlError, note_ebml_erro_o, "oddebml error" )
 
 /*******************************************************************************
 ********************************************************************* Functions

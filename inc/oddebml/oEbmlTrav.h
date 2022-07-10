@@ -34,16 +34,19 @@ typedef struct oEbmlTrav oEbmlTrav;
    }                                                                           \
 )
 
-ODDEBML_API bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1] );
+ODDEBML_API bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1],
+                                         cErrorStack es[static 1] );
 
-ODDEBML_API bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1] );
+ODDEBML_API bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1],
+                                           cErrorStack es[static 1] );
 
 /*******************************************************************************
 
 *******************************************************************************/
 
 ODDEBML_API bool visit_ebml_child_o( oEbmlTrav const master[static 1],
-                                     oEbmlTrav child[static 1] );
+                                     oEbmlTrav child[static 1],
+                                     cErrorStack es[static 1] );
 
 /*******************************************************************************
 

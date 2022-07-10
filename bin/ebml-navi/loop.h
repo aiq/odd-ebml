@@ -33,14 +33,15 @@ static bool handle_decl( OEbmlDeclMap* map,
    return true;
 }
 
-static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
+static bool loop( NaviCtx ctx[static 1] )
 {
    println_c_( "commands ->\n{s}\n", commands );
 
    oEbmlTrav* trav = &start_ebml_trav_o_( ctx->file );
    oEbmlDecl const* decl;
-   if ( not visit_adj_ebml_marker_o( trav ) ) return feof( ctx->file );
+   if ( not visit_adj_ebml_marker_o( trav, ctx->es ) ) return ctx->es->err->type == &C_Eof;
    if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) ) return false;
+   print_c_( "> " );
 
    cVarChars line = scalars_c_( 248, char );
    bool fin = true;
@@ -92,7 +93,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
       else if ( chars_is_c( inp, "n" ) ) //-------------------------------------
       {
          oEbmlMarker prev = trav->marker;
-         if ( not visit_next_ebml_marker_o( trav ) )
+         if ( not visit_next_ebml_marker_o( trav, ctx->es ) )
          {
             if ( feof( trav->file ) )
             {
@@ -101,7 +102,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
             }
             else
             {
-               push_file_error_c( es, trav->file );
+               push_file_error_c( ctx->es, trav->file );
                return false;
             }
          }
@@ -118,7 +119,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
             continue;
          }
          oEbmlMarker prev = trav->marker;
-         if ( not visit_adj_ebml_marker_o( trav ) )
+         if ( not visit_adj_ebml_marker_o( trav, ctx->es ) )
          {
             if ( feof( trav->file ) )
             {
@@ -127,7 +128,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
             }
             else
             {
-               push_file_error_c( es, trav->file );
+               push_file_error_c( ctx->es, trav->file );
                return false;
             }
          }
@@ -161,7 +162,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
          println_c_( "search for ID: {u32:x}", id.raw );
          bool found = false;
          oEbmlMarker prev = trav->marker;
-         while ( visit_next_dfs( trav, ctx->declMap ) )
+         while ( visit_next_dfs( trav, ctx ) )
          {
             if ( eq_ebml_id_o( trav->marker.id, id ) )
             {
@@ -183,7 +184,7 @@ static bool loop( EbmlNaviCtx ctx[static 1], cErrorStack es[static 1] )
             }
             else if ( ferror( trav->file ) )
             {
-               push_file_error_c( es, trav->file );
+               push_file_error_c( ctx->es, trav->file );
                return false;
             }
          }

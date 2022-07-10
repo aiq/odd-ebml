@@ -5,7 +5,7 @@
 
 static bool show_details( oEbmlTrav trav[static 1],
                           o_EbmlType type,
-                          EbmlNaviCtx ctx[static 1] )
+                          NaviCtx ctx[static 1] )
 {
    if ( type == o_EbmlInt )
    {
@@ -58,7 +58,7 @@ static bool show_details( oEbmlTrav trav[static 1],
    {
       oEbmlTrav subTrav = *trav;
       int64_t i = 1;
-      while ( visit_ebml_child_o( trav, &subTrav ) )
+      while ( visit_ebml_child_o( trav, &subTrav, ctx->es ) )
       {
          oEbmlDecl const* decl = get_from_ebml_decl_map_o( ctx->declMap, subTrav.marker.id );
          if ( decl == NULL )

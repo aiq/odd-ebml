@@ -9,19 +9,27 @@
 
 *******************************************************************************/
 
-bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1] )
+bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1],
+                              cErrorStack es[static 1] )
 {
-   if ( fsetpos( trav->file, &(trav->marker.pos) ) != 0 ) return false;
+   if ( fsetpos( trav->file, &(trav->marker.pos) ) != 0 )
+   {
+      return push_file_error_c( es, trav->file );
+   }
 
-   return fread_ebml_marker_o( trav->file, &(trav->marker) );
+   return fread_ebml_marker_o( trav->file, &(trav->marker), es );
 }
 
-bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1] )
+bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1],
+                               cErrorStack es[static 1] )
 {
    fpos_t next = trav->marker.pos + trav->marker.size;
-   if ( fsetpos( trav->file, &next ) != 0 ) return false;
+   if ( fsetpos( trav->file, &next ) != 0 )
+   {
+      return push_file_error_c( es, trav->file );
+   }
 
-   return fread_ebml_marker_o( trav->file, &(trav->marker) );
+   return fread_ebml_marker_o( trav->file, &(trav->marker), es );
 }
 
 /*******************************************************************************
@@ -29,7 +37,8 @@ bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1] )
 *******************************************************************************/
 
 bool visit_ebml_child_o( oEbmlTrav const master[static 1],
-                         oEbmlTrav child[static 1] )
+                         oEbmlTrav child[static 1],
+                         cErrorStack es[static 1] )
 {
    must_be_c_( master->file == child->file );
 
@@ -38,11 +47,11 @@ bool visit_ebml_child_o( oEbmlTrav const master[static 1],
 
    if ( master->marker.pos == child->marker.pos )
    {
-      return visit_adj_ebml_marker_o( child ) and
+      return visit_adj_ebml_marker_o( child, es ) and
              ebml_marker_covers_o( &(master->marker), &(child->marker) );
    }
 
-   return visit_next_ebml_marker_o( child ) and
+   return visit_next_ebml_marker_o( child, es ) and
           ebml_marker_covers_o( &(master->marker), &(child->marker) );
 }
 
@@ -111,12 +120,10 @@ bool fread_ebml_string_o( oEbmlTrav trav[static 1],
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    cChars chars;
-   bool res = ebml_as_string_o( &elem, &chars );
-   if ( res )
-   {
-      val->s = chars.s;
-   }
-   return res;
+   if ( not ebml_as_string_o( &elem, &chars ) ) return false;
+
+   val->s = chars.s;
+   return true;
 }
 
 bool fread_ebml_utf8_o( oEbmlTrav trav[static 1],
@@ -127,12 +134,10 @@ bool fread_ebml_utf8_o( oEbmlTrav trav[static 1],
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    cChars chars;
-   bool res = ebml_as_utf8_o( &elem, &chars );
-   if ( res )
-   {
-      val->s = chars.s;
-   }
-   return res;
+   if ( not ebml_as_utf8_o( &elem, &chars ) ) return false;
+
+   val->s = chars.s;
+   return true;
 }
 
 bool fread_ebml_date_o( oEbmlTrav trav[static 1],

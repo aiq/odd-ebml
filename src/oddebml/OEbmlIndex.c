@@ -112,11 +112,11 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
    {
       if ( freadCurr )
       {
-         ok = visit_adj_ebml_marker_o( trav );
+         ok = visit_adj_ebml_marker_o( trav, es );
       }
       else
       {
-         ok = visit_next_ebml_marker_o( trav );
+         ok = visit_next_ebml_marker_o( trav, es );
       }
 
       freadCurr = get_from_ebml_decl_map_o( declMap, trav->marker.id ) != NULL;
@@ -126,11 +126,11 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
          ok = attach_ebml_marker_o( index, &(trav->marker) );
       }
    }
-   if ( ferror( file ) != 0 )
+   if ( es->err->type != &C_Eof )
    {
-      push_file_error_c( es, file );
       release_c( index );
-      return false;
+      push_lit_str_error_c( es, "not able to build EBML index" );
+      return NULL;
    }
 
    return index;

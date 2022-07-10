@@ -33,18 +33,31 @@ bool ebml_marker_covers_o( oEbmlMarker const marker[static 1],
           in_range_c( markerRng, othRng.max );
 }
 
-bool fread_ebml_marker_o( FILE* f, oEbmlMarker marker[static 1] )
+bool fread_ebml_marker_o( FILE* f,
+                          oEbmlMarker marker[static 1],
+                          cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    oEbmlId id;
-   if ( not fread_ebml_id_o( f, &id ) ) return false;
+   if ( not fread_ebml_id_o( f, &id, es ) )
+   {
+      if ( es->err->type == &C_Eof ) return false;
+
+      return push_decode_error_c( es, "EBML ID" );
+   }
 
    oEbmlSize size;
-   if ( not fread_ebml_size_o( f, &size ) ) return false;
+   if ( not fread_ebml_size_o( f, &size, es ) )
+   {
+      return push_decode_error_c( es, "EBML Size" );
+   }
 
    fpos_t pos;
-   if ( fgetpos( f, &pos ) != 0 ) return false;
+   if ( fgetpos( f, &pos ) != 0 )
+   {
+      return push_file_error_c( es, f );
+   }
 
    marker->id = id;
    marker->size = decode_ebml_size_o( size );

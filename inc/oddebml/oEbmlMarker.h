@@ -42,6 +42,7 @@ ODDEBML_API bool ebml_marker_covers_o( oEbmlMarker const marker[static 1],
                                        oEbmlMarker const oth[static 1] );
 
 ODDEBML_API bool fread_ebml_marker_o( FILE* f,
-                                      oEbmlMarker marker[static 1] );
+                                      oEbmlMarker marker[static 1],
+                                      cErrorStack es[static 1] );
 
 #endif

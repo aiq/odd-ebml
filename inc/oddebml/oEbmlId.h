@@ -3,6 +3,7 @@
 
 #include "clingo/io/cRecorder.h"
 #include "clingo/io/cScanner.h"
+#include "clingo/lang/error.h"
 #include "clingo/type/uint32.h"
 #include "oddebml/apidecl.h"
 
@@ -71,7 +72,9 @@ ODDEBML_API oEbmlId invalid_ebml_id_o( void );
  io
 *******************************************************************************/
 
-ODDEBML_API bool fread_ebml_id_o( FILE* f, oEbmlId id[static 1] );
+ODDEBML_API bool fread_ebml_id_o( FILE* f,
+                                  oEbmlId id[static 1],
+                                  cErrorStack es[static 1] );
 
 ODDEBML_API bool fwrite_ebml_id_o( FILE* f, oEbmlId id );
 

@@ -149,16 +149,20 @@ static cBytes const checkBytes = slice_c_( cByte,
    0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01
 );
 
-bool fread_ebml_size_o( FILE* f, oEbmlSize size[static 1] )
+bool fread_ebml_size_o( FILE* f,
+                        oEbmlSize size[static 1],
+                        cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   cBytes bytes = vint_fread_o( f, buf, checkBytes );
+   cBytes bytes = vint_fread_o( f, buf, checkBytes, es );
    if ( is_invalid_c_( bytes ) ) return false;
 
    cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
-   return scan_ebml_size_o( sca, size );
+   return scan_ebml_size_o( sca, size )
+      ? true
+      : push_decode_error_c( es, "EBML Size" );
 }
 
 bool fwrite_ebml_size_o( FILE* f, oEbmlSize size )

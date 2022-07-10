@@ -124,16 +124,20 @@ oEbmlId invalid_ebml_id_o( void )
 
 static cBytes const checkBytes = slice_c_( cByte, 0x80, 0x40, 0x20, 0x10 );
 
-bool fread_ebml_id_o( FILE* f, oEbmlId id[static 1] )
+bool fread_ebml_id_o( FILE* f,
+                      oEbmlId id[static 1],
+                      cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    cVarBytes buf = scalars_c_( 4, cByte );
-   cBytes bytes = vint_fread_o( f, buf, checkBytes );
+   cBytes bytes = vint_fread_o( f, buf, checkBytes, es );
    if ( is_invalid_c_( bytes ) ) return false;
 
    cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
-   return scan_ebml_id_o( sca, id );
+   return scan_ebml_id_o( sca, id )
+      ? true
+      : push_decode_error_c( es, "EBML ID" );
 }
 
 bool fwrite_ebml_id_o( FILE* f, oEbmlId id )
