@@ -1,6 +1,7 @@
 #include "oddebml/oEbmlMarker.h"
 
 #include "_/misc.h"
+#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlElement.h"
 
@@ -33,24 +34,24 @@ bool ebml_marker_covers_o( oEbmlMarker const marker[static 1],
           in_range_c( markerRng, othRng.max );
 }
 
-bool fread_ebml_marker_o( FILE* f,
+bool fscan_ebml_marker_o( FILE* f,
                           oEbmlMarker marker[static 1],
                           cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    oEbmlId id;
-   if ( not fread_ebml_id_o( f, &id, es ) )
+   if ( not fscan_ebml_id_o( f, &id, es ) )
    {
       if ( es->err->type == &C_Eof ) return false;
 
-      return push_decode_error_c( es, "EBML ID" );
+      return push_import_error_c( es, "EBML ID" );
    }
 
    oEbmlSize size;
-   if ( not fread_ebml_size_o( f, &size, es ) )
+   if ( not fscan_ebml_size_o( f, &size, es ) )
    {
-      return push_decode_error_c( es, "EBML Size" );
+      return push_import_error_c( es, "EBML Size" );
    }
 
    fpos_t pos;
