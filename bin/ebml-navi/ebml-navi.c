@@ -38,8 +38,8 @@ int main( int argc, char* argv[] )
 
    if ( not loop( &ctx ) )
    {
-      push_file_error_and_close_c( es, ctx.file );
       println_c_( "we have a problem: {e}", es->err );
+      close_file_c( ctx.file, es );
       return EXIT_FAILURE;
    }
 
