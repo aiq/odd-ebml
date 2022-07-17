@@ -4,7 +4,7 @@
 #include "clingo/io/FILE.h"
 #include "clingo/type/cBytes.h"
 
-inline int64_t vint_scan_size_o( cByte first, cBytes checkBytes )
+static inline int64_t vint_scan_size_o( cByte first, cBytes checkBytes )
 {
    for_each_c_( cByte const*, check, checkBytes )
    {
@@ -16,10 +16,10 @@ inline int64_t vint_scan_size_o( cByte first, cBytes checkBytes )
    return 0;
 }
 
-inline cBytes vint_fread_o( FILE* f,
-                            cVarBytes buf,
-                            cBytes checkBytes,
-                            cErrorStack es[static 1] )
+static inline cBytes fscan_vint_o( FILE* f,
+                                   cVarBytes buf,
+                                   cBytes checkBytes,
+                                   cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
@@ -32,14 +32,14 @@ inline cBytes vint_fread_o( FILE* f,
    uint8_t first;
    if ( not int64_to_uint8_c( c, &first ) )
    {
-      push_decode_error_c( es, "VINT" );
+      push_lit_str_error_c( es, "invalid first byte" );
       return (cBytes)invalid_slice_c_();
    }
 
    int64_t size = vint_scan_size_o( first, checkBytes );
    if ( not in_range_c_( 1, size, buf.s ) )
    {
-      push_decode_error_c( es, "VINT" );
+      push_lit_str_error_c( es, "not enough buffer space" );
       return (cBytes)invalid_slice_c_();
    }
 
@@ -49,9 +49,16 @@ inline cBytes vint_fread_o( FILE* f,
    if ( res.s == 1 ) return res;
 
    buf = mid_var_bytes_c( buf, 1 );
-   if ( not fread_bytes_c( f, &buf ) ) 
+   if ( not fget_bytes_c( f, &buf ) ) 
    {
-      push_file_error_c( es, f );
+      if ( feof( f ) != 0 )
+      {
+         push_error_c_( es, &C_UnexpectedEof );
+      }
+      else
+      {
+         push_file_error_c( es, f );
+      }
       return (cBytes)invalid_slice_c_();
    }
 

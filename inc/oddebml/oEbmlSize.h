@@ -68,11 +68,13 @@ ODDEBML_API bool ebml_size_is_unknown_o( oEbmlSize size );
  io
 *******************************************************************************/
 
-ODDEBML_API bool fread_ebml_size_o( FILE* f,
+ODDEBML_API bool fscan_ebml_size_o( FILE* f,
                                     oEbmlSize size[static 1],
                                     cErrorStack es[static 1] );
 
-ODDEBML_API bool fwrite_ebml_size_o( FILE* f, oEbmlSize size );
+ODDEBML_API bool frecord_ebml_size_o( FILE* f,
+                                      oEbmlSize size,
+                                      cErrorStack es[static 1] );
 
 ODDEBML_API bool record_ebml_size_o( cRecorder rec[static 1], oEbmlSize size );
 

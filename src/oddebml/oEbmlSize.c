@@ -1,6 +1,7 @@
 #include "oddebml/oEbmlSize.h"
 
 #include "_/misc.h"
+#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/write.h"
 #include "clingo/io/write_type.h"
 #include "clingo/type/int8.h"
@@ -149,29 +150,37 @@ static cBytes const checkBytes = slice_c_( cByte,
    0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01
 );
 
-bool fread_ebml_size_o( FILE* f,
+bool fscan_ebml_size_o( FILE* f,
                         oEbmlSize size[static 1],
                         cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   cBytes bytes = vint_fread_o( f, buf, checkBytes, es );
+   cBytes bytes = fscan_vint_o( f, buf, checkBytes, es );
    if ( is_invalid_c_( bytes ) ) return false;
 
    cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
    return scan_ebml_size_o( sca, size )
       ? true
-      : push_decode_error_c( es, "EBML Size" );
+      : push_imp_exp_error_c( es, sca->err );
 }
 
-bool fwrite_ebml_size_o( FILE* f, oEbmlSize size )
+bool frecord_ebml_size_o( FILE* f,
+                          oEbmlSize size,
+                          cErrorStack es[static 1] )
 {
    must_exist_c_( f );
 
    cRecorder* rec = &recorder_c_( 8 );
-   return record_ebml_size_o( rec, size ) and
-      fwrite_bytes_c( f, recorded_bytes_c( rec ) );
+   if ( not record_ebml_size_o( rec, size ) )
+   {
+      return push_imp_exp_error_c( es, rec->err );
+   }
+
+   return fput_bytes_c( f, recorded_bytes_c( rec ) )
+      ? true
+      : push_file_error_c( es, f );
 }
 
 union vint64Mixer {
@@ -197,14 +206,14 @@ bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] )
 {
    if ( sca->space == 0 )
    {
-      return false;
+      return set_scanner_error_c( sca, c_NotAbleToScanValue );
    }
 
    cByte const* first = sca->mem;
    cBytes idBytes = view_bytes_c( sca, vint_scan_size_o( *first, checkBytes ) );
    if ( is_empty_c_( idBytes) )
    {
-      return false;
+      return set_scanner_error_c( sca, c_NotAbleToScanValue );
    }
 
    union vint64Mixer mixer;
