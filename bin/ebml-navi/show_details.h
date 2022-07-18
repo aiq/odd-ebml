@@ -7,45 +7,62 @@ static bool show_details( oEbmlTrav trav[static 1],
                           o_EbmlType type,
                           NaviCtx ctx[static 1] )
 {
+   oEbmlDecl const* decl = get_from_ebml_decl_map_o( ctx->declMap, trav->marker.id );
+   if ( decl == NULL )
+   {
+      push_lit_str_error_c( ctx->es, "not able to resolve ebml id" );
+   }
    if ( type == o_EbmlInt )
    {
       int64_t i64;
-      return fread_ebml_int_o( trav, &i64 ) and println_c_( "d: {i64}", i64 );
+      if ( not fget_ebml_int_o( trav, &i64 ) )
+         return push_ebml_trav_error_o( ctx->es, trav ); 
+
+      return println_c_( "d: {i64}", i64 );
    }
    else if ( type == o_EbmlUint )
    {
       uint64_t u64;
-      return fread_ebml_uint_o( trav, &u64 ) and println_c_( "d: {u64}", u64 );
+      if ( not fget_ebml_uint_o( trav, &u64 ) )
+         return push_ebml_trav_error_o( ctx->es, trav ); 
+
+      return println_c_( "d: {u64}", u64 );
    }
    else if ( type == o_EbmlFloat )
    {
       double d;
-      return fread_ebml_float_o( trav, &d ) and println_c_( "d: {d}", d );
+      if ( not fget_ebml_float_o( trav, &d ) )
+         return push_ebml_trav_error_o( ctx->es, trav );
+
+      return println_c_( "d: {d}", d );
    }
    else if ( type == o_EbmlString )
    {
       cVarChars buf = heap_slice_c_( trav->marker.size, char );
       if ( buf.v == NULL ) return false;
       
-      bool res = fread_ebml_string_o( trav, &buf ) and 
-                 println_c_( "d: {cs}", as_chars_c( buf ) );
+      bool ok = fget_ebml_string_o( trav, &buf );
+      println_c_( "d: {cs}", as_chars_c( buf ) );
       free( buf.v );
-      return res;
+      return ok ? true
+                : push_ebml_trav_error_o( ctx->es, trav );
    }
    else if ( type == o_EbmlUtf8 )
    {
       cVarChars buf = heap_slice_c_( trav->marker.size, char );
       if ( buf.v != NULL ) return false;
       
-      bool res = fread_ebml_utf8_o( trav, &buf ) and 
-                 println_c_( "d: {cs}", as_chars_c( buf ) );
+      bool ok = fget_ebml_utf8_o( trav, &buf );
+      println_c_( "d: {cs}", as_chars_c( buf ) );
       free( buf.v );
-      return res;
+      return ok ? true
+                : push_ebml_trav_error_o( ctx->es, trav );
    }
    else if ( type == o_EbmlDate )
    {
       oEbmlDate date;
-      if ( fread_ebml_date_o( trav, &date ) ) return false;
+      if ( fget_ebml_date_o( trav, &date ) )
+         return push_ebml_trav_error_o( ctx->es, trav );
    
       println_scope_c_( rec, 248 )
       {

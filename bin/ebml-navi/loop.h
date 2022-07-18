@@ -45,7 +45,7 @@ static bool loop( NaviCtx ctx[static 1] )
 
    cVarChars line = scalars_c_( 248, char );
    bool fin = true;
-   while ( fread_line_c( stdin, 248, &line, &fin ) )
+   while ( fget_line_c( stdin, 248, &line, &fin ) )
    {
       if ( not fin )
       {
@@ -142,10 +142,10 @@ static bool loop( NaviCtx ctx[static 1] )
          cVarBytes buf = heap_slice_c_( trav->marker.size, cByte );
          if ( buf.v == NULL ) return false;
       
-         bool res = fread_ebml_bytes_o( trav, &buf ) and
-                    println_c_( "r: {bs}", as_bytes_c( buf ) );
+         bool ok = fget_ebml_bytes_o( trav, &buf );
+         if ( ok ) println_c_( "r: {bs}", as_bytes_c( buf ) );
          free( buf.v );
-         if ( not res ) return false;
+         if ( not ok ) return push_ebml_trav_error_o( ctx->es, trav );
       }
       else if ( chars_starts_with_c_( inp, "s " ) ) //--------------------------
       {

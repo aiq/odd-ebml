@@ -1,5 +1,6 @@
 #include "oddebml/oEbmlTrav.h"
 
+#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlElement.h"
 
@@ -17,7 +18,7 @@ bool visit_adj_ebml_marker_o( oEbmlTrav trav[static 1],
       return push_file_error_c( es, trav->file );
    }
 
-   return fread_ebml_marker_o( trav->file, &(trav->marker), es );
+   return fscan_ebml_marker_o( trav->file, &(trav->marker), es );
 }
 
 bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1],
@@ -29,7 +30,7 @@ bool visit_next_ebml_marker_o( oEbmlTrav trav[static 1],
       return push_file_error_c( es, trav->file );
    }
 
-   return fread_ebml_marker_o( trav->file, &(trav->marker), es );
+   return fscan_ebml_marker_o( trav->file, &(trav->marker), es );
 }
 
 /*******************************************************************************
@@ -59,8 +60,15 @@ bool visit_ebml_child_o( oEbmlTrav const master[static 1],
 
 *******************************************************************************/
 
-bool fread_ebml_bytes_o( oEbmlTrav trav[static 1],
-                         cVarBytes buf[static 1] )
+#define NotEnoughSpaceErrorCode_ (c_CustomImpExpError+1)
+#define FileErrorCode_ (c_CustomImpExpError+2)
+static inline bool set_error( oEbmlTrav trav[static 1], int err )
+{
+   trav->err = err;
+   return false;
+}
+
+bool fget_ebml_bytes_o( oEbmlTrav trav[static 1], cVarBytes buf[static 1] )
 {
    if ( trav->marker.size == 0 )
    {
@@ -68,55 +76,73 @@ bool fread_ebml_bytes_o( oEbmlTrav trav[static 1],
       return true;
    }
 
-   if ( fsetpos( trav->file, &(trav->marker.pos) ) != 0 ) return false;
+   if ( fsetpos( trav->file, &(trav->marker.pos) ) != 0 )
+   {
+      return set_error( trav, FileErrorCode_ );
+   }
 
-   if ( buf->s < trav->marker.size ) return false;
+   if ( buf->s < trav->marker.size )
+   {
+      return set_error( trav, NotEnoughSpaceErrorCode_ );
+   }
 
    buf->s = trav->marker.size;
-   return fread_bytes_c( trav->file, buf );
+   if ( not fget_bytes_c( trav->file, buf ) )
+   {
+      return set_error( trav, FileErrorCode_ );
+   }
+
+   return true;
 }
 
-bool fread_ebml_int_o( oEbmlTrav trav[static 1],
-                       int64_t val[static 1] )
+bool fget_ebml_int_o( oEbmlTrav trav[static 1], int64_t val[static 1] )
 {
-   if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
+   if ( not in_range_c_( 0, trav->marker.size, 8 ) )
+   {
+      return set_error( trav, c_NotAbleToScanValue );
+   }
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    return ebml_as_int_o( &elem, val );
 }
 
-bool fread_ebml_uint_o( oEbmlTrav trav[static 1],
-                        uint64_t val[static 1] )
+bool fget_ebml_uint_o( oEbmlTrav trav[static 1], uint64_t val[static 1] )
 {
-   if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
+   if ( not in_range_c_( 0, trav->marker.size, 8 ) )
+   {
+      return set_error( trav, c_NotAbleToScanValue );
+   }
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    return ebml_as_uint_o( &elem, val );
 }
 
-bool fread_ebml_float_o( oEbmlTrav trav[static 1],
-                         double val[static 1] )
+bool fget_ebml_float_o( oEbmlTrav trav[static 1], double val[static 1] )
 {
-   if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
+   if ( trav->marker.size != 0 and
+        trav->marker.size != 4 and
+        trav->marker.size != 8 )
+   {
+      return set_error( trav, c_NotAbleToScanValue );
+   }
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    return ebml_as_float_o( &elem, val );
 }
 
-bool fread_ebml_string_o( oEbmlTrav trav[static 1],
-                          cVarChars val[static 1] )
+bool fget_ebml_string_o( oEbmlTrav trav[static 1], cVarChars val[static 1] )
 {
    cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    cChars chars;
@@ -126,11 +152,10 @@ bool fread_ebml_string_o( oEbmlTrav trav[static 1],
    return true;
 }
 
-bool fread_ebml_utf8_o( oEbmlTrav trav[static 1],
-                        cVarChars val[static 1] )
+bool fget_ebml_utf8_o( oEbmlTrav trav[static 1], cVarChars val[static 1] )
 {
    cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    cChars chars;
@@ -140,14 +165,39 @@ bool fread_ebml_utf8_o( oEbmlTrav trav[static 1],
    return true;
 }
 
-bool fread_ebml_date_o( oEbmlTrav trav[static 1],
-                        oEbmlDate val[static 1] )
+bool fget_ebml_date_o( oEbmlTrav trav[static 1], oEbmlDate val[static 1] )
 {
-   if ( not in_range_c_( 0, trav->marker.size, 8 ) ) return false;
+   if ( trav->marker.size != 0 and trav->marker.size != 8 )
+   {
+      return set_error( trav, c_NotAbleToScanValue );
+   }
 
    cVarBytes buf = scalars_c_( 8, cByte );
-   if ( not fread_ebml_bytes_o( trav, &buf ) ) return false;
+   if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
    oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
    return ebml_as_date_o( &elem, val );
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+bool push_ebml_trav_error_o( cErrorStack es[static 1],
+                             oEbmlTrav trav[static 1] )
+{
+   if ( trav->err <= c_CustomImpExpError )
+   {
+      return push_imp_exp_error_c( es, trav->err );
+   }
+   else if ( trav->err == NotEnoughSpaceErrorCode_ )
+   {
+      return push_error_c_( es, &C_NotEnoughBufferError );
+   }
+   else if ( trav->err == FileErrorCode_)
+   {
+      return push_file_error_c( es, trav->file );
+   }
+
+   return push_lit_str_error_c( es, "unkown error code" );
 }

@@ -23,8 +23,6 @@ set( INC_FILES
 # SRC_FILES
 ################################################################################
 set( SRC_FILES
-   ${SRC_DIR}/_/misc.c
-
    ${SRC_DIR}/oddebml/error.c
    ${SRC_DIR}/oddebml/o_EbmlType.c
    ${SRC_DIR}/oddebml/OEbmlBuilder.c
