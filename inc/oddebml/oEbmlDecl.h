@@ -13,8 +13,8 @@ struct oEbmlDecl
 {
    char const* name;
    oEbmlId id;
-   int64_t minOccurs;
-   int64_t maxOccurs;
+   bool mand;
+   bool mult;
    o_EbmlType type;
 };
 typedef struct oEbmlDecl oEbmlDecl;
@@ -61,13 +61,13 @@ ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
 
 *******************************************************************************/
 
-#define ebml_decl_o_( Name, Id, MinOccurs, MaxOccurs, Type )                   \
+#define ebml_decl_o_( Name, Id, Mand, Mult, Type )                             \
 (                                                                              \
    (oEbmlDecl){                                                                \
       .name=(Name),                                                            \
       .id=(Id),                                                                \
-      .minOccurs=(MinOccurs),                                                  \
-      .maxOccurs=(MaxOccurs),                                                  \
+      .mand=(Mand),                                                            \
+      .mult=(Mult),                                                            \
       .type=(Type)                                                             \
    }                                                                           \
 )
