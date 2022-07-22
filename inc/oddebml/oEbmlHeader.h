@@ -33,10 +33,8 @@ typedef struct oEbmlHeader oEbmlHeader;
 ODDEBML_API bool append_ebml_header_o( OEbmlBuilder* b,
                                        oEbmlHeader const header[static 1] );
 
-ODDEBML_API bool ebml_as_header_o( oEbmlElement const elem[static 1],
-                                   oEbmlHeader header[static 1] );
-
-ODDEBML_API bool view_ebml_header_element_o( cScanner sca[static 1],
-                                             oEbmlHeader header[static 1] );
+ODDEBML_API bool unmarshal_ebml_header_o( oEbmlElement const elem[static 1],
+                                          oEbmlHeader header[static 1],
+                                          cErrorStack es[static 1] );
 
 #endif

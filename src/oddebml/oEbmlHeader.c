@@ -1,6 +1,9 @@
 #include "oddebml/oEbmlHeader.h"
 
 #include "_/misc.h"
+#include "clingo/io/c_ImpExpError.h"
+#include "oddebml/error.h"
+#include "oddebml/o_EbmlType.h"
 #include "oddebml/oEbmlDecl.h"
 #include "oddebml/oEbmlElement.h"
 
@@ -30,51 +33,69 @@ bool append_ebml_header_o( OEbmlBuilder* b,
    return true;
 }
 
-bool ebml_as_header_o( oEbmlElement const elem[static 1],
-                       oEbmlHeader header[static 1] )
+bool unmarshal_ebml_header_o( oEbmlElement const elem[static 1],
+                              oEbmlHeader header[static 1],
+                              cErrorStack es[static 1] )
 {
-   if ( not eq_ebml_id_o( elem->id, O_Ebml.id ) ) return false;
+   if ( not eq_ebml_id_o( elem->id, O_Ebml.id ) )
+      return push_missing_ebml_id_error_o( es, O_Ebml.id );
 
    cScanner* sca = &make_scanner_c_( elem->bytes.s, elem->bytes.v );
-   once_c_( xyz )
-   {
-      if ( not on_ebml_id_o( sca, O_EbmlVersion.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->version) ) ) break;
+   // -------------------------------------------------------------- EBMLVersion
+   if ( not on_ebml_id_o( sca, O_EbmlVersion.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlVersion.id );
 
-      if ( not on_ebml_id_o( sca, O_EbmlReadVersion.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->readVersion) ) ) break;
+   if ( not scan_ebml_uint_element_o( sca, &(header->version) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlVersion.id, o_EbmlUint );
 
-      if ( not on_ebml_id_o( sca, O_EbmlMaxIdLength.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->maxIdLength) ) ) break;
+   // ---------------------------------------------------------- EBMLReadVersion
+   if ( not on_ebml_id_o( sca, O_EbmlReadVersion.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlReadVersion.id );
 
-      if ( not on_ebml_id_o( sca, O_EbmlMaxSizeLength.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->maxSizeLength) ) ) break;
+   if ( not scan_ebml_uint_element_o( sca, &(header->readVersion) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlReadVersion.id, o_EbmlUint );
 
-      if ( not on_ebml_id_o( sca, O_EbmlDocType.id ) ) break;
-      if ( not view_ebml_string_element_o( sca, &(header->docType) ) ) break;
+   // ---------------------------------------------------------- EBMLMaxIdLength
+   if ( not on_ebml_id_o( sca, O_EbmlMaxIdLength.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlMaxIdLength.id );
 
-      if ( not on_ebml_id_o( sca, O_EbmlDocTypeVersion.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->docTypeVersion) ) ) break;
+   if ( not scan_ebml_uint_element_o( sca, &(header->maxIdLength) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlMaxIdLength.id, o_EbmlUint );
 
-      if ( not on_ebml_id_o( sca, O_EbmlDocTypeReadVersion.id ) ) break;
-      if ( not scan_ebml_uint_element_o( sca, &(header->docTypeReadVersion) ) ) break;
+   // -------------------------------------------------------- EBMLMaxSizeLength
+   if ( not on_ebml_id_o( sca, O_EbmlMaxSizeLength.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlMaxSizeLength.id );
 
-      return sca->space == 0;
-   }
-   return false;
-}
+   if ( not scan_ebml_uint_element_o( sca, &(header->maxSizeLength) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlMaxSizeLength.id, o_EbmlUint );
 
-bool view_ebml_header_element_o( cScanner sca[static 1],
-                                 oEbmlHeader header[static 1] )
-{
-   int64_t oldPos = sca->pos;
-   oEbmlElement elem;
-   if ( view_ebml_element_o( sca, &elem ) and
-        eq_ebml_id_o( elem.id, O_Ebml.id ) and
-        ebml_as_header_o( &elem, header ) )
-   {
-      return true;
-   }
-   move_scanner_to_c( sca, oldPos );
-   return false;
+   // -------------------------------------------------------------- EBMLDocType
+   if ( not on_ebml_id_o( sca, O_EbmlDocType.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlDocType.id );
+
+   if ( not view_ebml_string_element_o( sca, &(header->docType) ) )
+       return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlDocType.id, o_EbmlString );
+
+   // ----------------------------------------------------- O_EbmlDocTypeVersion
+   if ( not on_ebml_id_o( sca, O_EbmlDocTypeVersion.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlDocTypeVersion.id );
+
+   if ( not scan_ebml_uint_element_o( sca, &(header->docTypeVersion) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlDocTypeVersion.id, o_EbmlUint );
+
+   // ------------------------------------------------- O_EbmlDocTypeReadVersion
+   if ( not on_ebml_id_o( sca, O_EbmlDocTypeReadVersion.id ) )
+      return push_missing_ebml_id_error_o( es, O_EbmlDocTypeReadVersion.id );
+
+   if ( not scan_ebml_uint_element_o( sca, &(header->docTypeReadVersion) ) )
+      return push_imp_exp_error_c( es, sca->err ) and
+             push_unmarshal_ebml_error_o( es, O_EbmlDocTypeReadVersion.id, o_EbmlUint );
+
+   return sca->space == 0;
 }
