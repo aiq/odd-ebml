@@ -34,7 +34,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/FileLists.cmake )
 fetchcontent_declare(
     clingo
     GIT_REPOSITORY "https://github.com/aiq/clingo"
-    GIT_TAG "61b142bfddd82d3f3eb9c03d1d2e495d9feae1e6"
+    GIT_TAG "787d0cf82dae41d29f9fadf02d22ef5a93dfc13a"
 )
 
 fetchcontent_populate( clingo )
