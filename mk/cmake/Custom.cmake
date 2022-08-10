@@ -37,11 +37,11 @@ endfunction( add_tests )
 # custom functions
 ################################################################################
 
-function( add_bins BinFiles IncDirs LinkLibs )
-   foreach( BinFile IN LISTS BinFiles )
-      get_filename_component( Test ${BinFile} NAME_WE )
-      add_executable( ${Test} ${BinFile} )
+function( add_apps AppFiles IncDirs LinkLibs )
+   foreach( AppFile IN LISTS AppFiles )
+      get_filename_component( Test ${AppFile} NAME_WE )
+      add_executable( ${Test} ${AppFile} )
       target_include_directories( ${Test} PUBLIC ${IncDirs} )
       target_link_libraries( ${Test} PRIVATE ${LinkLibs} )
    endforeach()
-endfunction( add_bins )
+endfunction( add_apps )

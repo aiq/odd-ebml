@@ -63,8 +63,8 @@ set( TEST_FILES
 )
 
 ################################################################################
-# BIN_FILES
+# APP_FILES
 ################################################################################
-set( BIN_FILES
-   ${BIN_DIR}/ebml-navi/ebml-navi.c
+set( APP_FILES
+   ${APP_DIR}/ebml-navi/ebml-navi.c
 )
