@@ -67,4 +67,5 @@ set( TEST_FILES
 ################################################################################
 set( APP_FILES
    ${APP_DIR}/ebml-navi/ebml-navi.c
+   ${APP_DIR}/ebml-vint/ebml-vint.c
 )
