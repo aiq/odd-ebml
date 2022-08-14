@@ -65,7 +65,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
    if ( not alloc_ebml_marker_stack_o( &(ctx->history), 24 ) )
    {
       push_errno_error_c( es, ENOMEM );
-      push_lit_str_error_c( es, "not able to allocate ctx.markerStack" );
+      push_lit_error_c( es, "not able to allocate ctx.markerStack" );
       deref_ctx( ctx, es );
       return false;
    }
@@ -74,7 +74,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
    if ( ctx->declMap == NULL )
    {
       push_errno_error_c( es, ENOMEM );
-      push_lit_str_error_c( es, "not able to allocate ctx.declMap" );
+      push_lit_error_c( es, "not able to allocate ctx.declMap" );
       deref_ctx( ctx, es );
       return false;
    }

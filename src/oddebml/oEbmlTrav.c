@@ -199,5 +199,5 @@ bool push_ebml_trav_error_o( cErrorStack es[static 1],
       return push_file_error_c( es, trav->file );
    }
 
-   return push_lit_str_error_c( es, "unkown error code" );
+   return push_lit_error_c( es, "unkown error code" );
 }

@@ -10,7 +10,7 @@ static bool show_details( oEbmlTrav trav[static 1],
    oEbmlDecl const* decl = get_from_ebml_decl_map_o( ctx->declMap, trav->marker.id );
    if ( decl == NULL )
    {
-      push_lit_str_error_c( ctx->es, "not able to resolve ebml id" );
+      push_lit_error_c( ctx->es, "not able to resolve ebml id" );
    }
    if ( type == o_EbmlInt )
    {

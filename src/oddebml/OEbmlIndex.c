@@ -129,7 +129,7 @@ OEbmlIndex* build_ebml_index_o( FILE* file,
    if ( es->err->type != &C_Eof )
    {
       release_c( index );
-      push_lit_str_error_c( es, "not able to build EBML index" );
+      push_lit_error_c( es, "not able to build EBML index" );
       return NULL;
    }
 

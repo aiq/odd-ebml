@@ -32,14 +32,14 @@ static inline cBytes fscan_vint_o( FILE* f,
    uint8_t first;
    if ( not int64_to_uint8_c( c, &first ) )
    {
-      push_lit_str_error_c( es, "invalid first byte" );
+      push_lit_error_c( es, "invalid first byte" );
       return (cBytes)invalid_slice_c_();
    }
 
    int64_t size = vint_scan_size_o( first, checkBytes );
    if ( not in_range_c_( 1, size, buf.s ) )
    {
-      push_lit_str_error_c( es, "not enough buffer space" );
+      push_lit_error_c( es, "not enough buffer space" );
       return (cBytes)invalid_slice_c_();
    }
 
