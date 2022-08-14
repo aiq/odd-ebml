@@ -210,6 +210,13 @@ bool FuncName( cScanner sca[static 1], Type val[static 1] )                    \
    return false;                                                               \
 }
 
+static inline bool ebml_as_binary( oEbmlElement const elem[static 1],
+                                   cBytes val[static 1] )
+{
+   *val = elem->bytes;
+   return true;
+}
+SCAN_EBML_VAL_( view_ebml_binary_element_o,  cBytes,     ebml_as_binary )
 SCAN_EBML_VAL_( scan_ebml_int_element_o,     int64_t,    ebml_as_int_o )
 SCAN_EBML_VAL_( scan_ebml_uint_element_o,    uint64_t,   ebml_as_uint_o )
 SCAN_EBML_VAL_( scan_ebml_float_element_o,   double,     ebml_as_float_o )

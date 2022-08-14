@@ -65,6 +65,9 @@ ODDEBML_API bool view_ebml_element_o( cScanner sca[static 1],
 
 *******************************************************************************/
 
+ODDEBML_API bool view_ebml_binary_element_o( cScanner sca[static 1],
+                                             cBytes val[static 1] );
+
 ODDEBML_API bool scan_ebml_int_element_o( cScanner sca[static 1],
                                           int64_t val[static 1] );
 
