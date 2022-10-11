@@ -88,7 +88,7 @@ bool ebml_as_string_o( oEbmlElement const elem[static 1],
    cBytes bin = elem->bytes;
    if ( is_empty_c_( bin ) )
    {
-      *val = empty_chars_c();
+      *val = (cChars)empty_c_();
       return true;
    }
    if ( last_c_( bin ) == 0x00 )
@@ -101,7 +101,7 @@ bool ebml_as_string_o( oEbmlElement const elem[static 1],
       if ( not in_range_c_( 0x20, *b, 0x7E ) ) return false;;
    }
 
-   *val = chars_c( bin.s, (char const*) bin.v );
+   *val = (cChars){ bin.s, (char const*)bin.v };
    return true;
 }
 
@@ -111,7 +111,7 @@ bool ebml_as_utf8_o( oEbmlElement const elem[static 1],
    cBytes bin = elem->bytes;
    if ( is_empty_c_( bin ) )
    {
-      *val = empty_chars_c();
+      *val = (cChars)empty_c_();
       return true;
    }
    if ( last_c_( bin ) == 0x00 )
@@ -119,7 +119,7 @@ bool ebml_as_utf8_o( oEbmlElement const elem[static 1],
       bin.s--;
    }
 
-   cChars c = chars_c( bin.s, (char const*) bin.v );
+   cChars c = { bin.s, (char const*)bin.v };
    if ( count_runes_c( c ) == -1 ) return false;
 
    *val = c;

@@ -525,10 +525,10 @@ static oEbmlDeclSlice get_ebml_mkv_decl( oVarEbmlDeclSlice buf )
    buf.s = set_ebml_decl_slice_c( buf, src );
    if ( buf.s != src.s )
    {
-      return (oEbmlDeclSlice)invalid_slice_c_();
+      return (oEbmlDeclSlice)invalid_c_();
    }
 
-   return as_ebml_decl_slice_c( buf );
+   return as_c_( oEbmlDeclSlice, buf );
 }
 
 #endif

@@ -1,19 +1,18 @@
 #ifndef EBML_NAVI_ENV_H
 #define EBML_NAVI_ENV_H
 
-#include "_/stack.h"
 #include "clingo/container/map.h"
+#include "clingo/container/pile.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/OEbmlDeclMap.h"
 
 #include "mkv_decl.h"
 
-STATIC_STACK_IMPL_C_(
+STATIC_VAL_PILE_IMPL_C_(
    __attribute__((unused)),   // Attr
    oEbmlMarker,               // Type
-   oEbmlMarkerStack,          // StackType
-   ebml_marker_o,             // FuncSuffix
-   ebml_marker_stack_o        // StackFuncSuffix
+   oEbmlMarkerPile,           // PileType
+   ebml_marker_o
 )
 
 static uint64_t hash_ebml_marker_o( oEbmlMarker const m[static 1] )
@@ -37,7 +36,7 @@ VAL_VAL_MAP_IMPL_C_(
 struct NaviCtx
 {
    FILE* file;
-   oEbmlMarkerStack history;
+   oEbmlMarkerPile history;
    OEbmlDeclMap* declMap;
    cErrorStack* es;
 };
@@ -47,7 +46,7 @@ void deref_ctx( NaviCtx ctx[static 1], cErrorStack es[static 1] )
 {
    if ( ctx->file != NULL ) close_file_c( ctx->file, es );
 
-   if ( ctx->history.v != NULL ) free_ebml_marker_stack_o( &(ctx->history) );
+   if ( ctx->history.v != NULL ) free( ctx->history.v );
 
    if ( ctx->declMap != NULL ) release_c( ctx->declMap );
 }
@@ -62,7 +61,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
       return false;
    }
 
-   if ( not alloc_ebml_marker_stack_o( &(ctx->history), 24 ) )
+   if ( not alloc_pile_of_ebml_marker_o( &(ctx->history), 24 ) )
    {
       push_errno_error_c( es, ENOMEM );
       push_lit_error_c( es, "not able to allocate ctx.markerStack" );

@@ -1,6 +1,6 @@
 #include "oddebml/OEbmlIndex.h"
 
-#include "_/stack.h"
+#include "clingo/container/pile.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlTrav.h"
 
@@ -8,12 +8,11 @@
 
 *******************************************************************************/
 
-STATIC_STACK_IMPL_C_(
+STATIC_VAL_PILE_IMPL_C_(
    __attribute__((unused)),   // Attr
-   oEbmlMarker,         // Type
-   oEbmlMarkerStack,    // StackType
-   ebml_marker_o,       // FuncSuffix
-   ebml_marker_stack_o  // StackFuncSuffix
+   oEbmlMarker,               // Type
+   oEbmlMarkerPile,           // PileType
+   ebml_marker_o              // FuncSuffix
 )
 
 VAL_VAL_MAP_IMPL_C_(
@@ -21,7 +20,7 @@ VAL_VAL_MAP_IMPL_C_(
    OIndexMap,        // MapType
    oIndexRow,        // RowType
    uint32_t,         // KeyType
-   oEbmlMarkerStack, // ValType
+   oEbmlMarkerPile,  // ValType
    index_map_o,      // FuncName
    O_IndexMapMeta,   // Meta
    hash_int64_c,     // HashFunc
@@ -47,12 +46,12 @@ static inline void cleanup( void* instance )
    if ( i->map )
    {
       uint32_t const* key;
-      oEbmlMarkerStack* stack;
-      iterate_map_c_( itr, key, stack, i->map, next_var_in_index_map_o )
+      oEbmlMarkerPile* pile;
+      iterate_map_c_( itr, key, pile, i->map, next_var_in_index_map_o )
       {
-         if ( not is_empty_c_( *stack ) )
+         if ( not is_empty_c_( *pile ) )
          {
-            free_ebml_marker_stack_o( stack );
+            free( pile->v );
          }
       }
    }
@@ -146,28 +145,27 @@ bool attach_ebml_marker_o( OEbmlIndex* index,
    must_exist_c_( index );
    uint32_t key = marker->id.raw;
 
-   oEbmlMarkerStack* stack = get_var_from_index_map_o( index->map, key );
-   if ( stack == NULL )
+   oEbmlMarkerPile* pile = get_var_from_index_map_o( index->map, key );
+   if ( pile == NULL )
    {
-      oEbmlMarkerStack tmp = {};
+      oEbmlMarkerPile tmp = {};
       if ( not set_on_index_map_o( index->map, key, tmp ) ) return false;
 
-      stack = get_var_from_index_map_o( index->map, key );
-      if ( stack == NULL ) return false;
+      pile = get_var_from_index_map_o( index->map, key );
+      if ( pile == NULL ) return false;
    }
 
-   return push_ebml_marker_o( stack, *marker );
+   return put_ebml_marker_o( pile, *marker );
 }
 
 oEbmlMarkerSlice get_ebml_markers_o( OEbmlIndex const* index, oEbmlId id )
 {
    must_exist_c_( index );
 
-   oEbmlMarkerStack const* stack = get_from_index_map_o( index->map,
-                                                         id.raw );
-   if ( stack == NULL )
+   oEbmlMarkerPile const* pile = get_from_index_map_o( index->map, id.raw );
+   if ( pile == NULL )
    {
-      return (oEbmlMarkerSlice)invalid_slice_c_();
+      return (oEbmlMarkerSlice)invalid_c_();
    }
-   return (oEbmlMarkerSlice){ .s=stack->s, .v=stack->v };
+   return as_c_( oEbmlMarkerSlice, *pile );
 }

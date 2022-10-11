@@ -19,12 +19,10 @@ struct oEbmlDecl
 };
 typedef struct oEbmlDecl oEbmlDecl;
 
-SLICE_DEF_C_(
-   oEbmlDecl,              // Type
-   oEbmlDeclSlice,         // SliceType
-   ebml_decl_slice_c,      // FuncName
-   oVarEbmlDeclSlice,      // VarSliceType
-   var_ebml_decl_slice_c   // VarFuncName
+SLICES_C_(
+   oEbmlDecl,           // Type
+   oEbmlDeclSlice,      // SliceType
+   oVarEbmlDeclSlice    // VarSliceType
 )
 
 /*******************************************************************************
@@ -73,6 +71,9 @@ ODDEBML_API extern oEbmlDecl const O_EbmlSignedElement;
 )
 
 ODDEBML_API oEbmlDeclSlice get_ebml_header_decl_o( oVarEbmlDeclSlice buf );
+
+ODDEBML_API int64_t set_ebml_decl_slice_c( oVarEbmlDeclSlice dst,
+                                           oEbmlDeclSlice src );
 
 ODDEBML_API oEbmlDeclSlice ebml_header_decl_o( void );
 

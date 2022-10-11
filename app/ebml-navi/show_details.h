@@ -42,7 +42,7 @@ static bool show_details( oEbmlTrav trav[static 1],
       if ( buf.v == NULL ) return false;
       
       bool ok = fget_ebml_string_o( trav, &buf );
-      println_c_( "d: {cs}", as_chars_c( buf ) );
+      println_c_( "d: {cs}", as_c_( cChars, buf ) );
       free( buf.v );
       return ok ? true
                 : push_ebml_trav_error_o( ctx->es, trav );
@@ -53,7 +53,7 @@ static bool show_details( oEbmlTrav trav[static 1],
       if ( buf.v != NULL ) return false;
       
       bool ok = fget_ebml_utf8_o( trav, &buf );
-      println_c_( "d: {cs}", as_chars_c( buf ) );
+      println_c_( "d: {cs}", as_c_( cChars, buf ) );
       free( buf.v );
       return ok ? true
                 : push_ebml_trav_error_o( ctx->es, trav );

@@ -1,22 +1,11 @@
 #include "oddebml/oEbmlDecl.h"
 
 #include "clingo/io/write.h"
+#include "clingo/lang/algo.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
 ********************************************************************************
-
-*******************************************************************************/
-
-SLICE_IMPL_C_(
-   oEbmlDecl,              // Type
-   oEbmlDeclSlice,         // SliceType
-   ebml_decl_slice_c,      // FuncName
-   oVarEbmlDeclSlice,      // VarSliceType
-   var_ebml_decl_slice_c   // VarFuncName
-)
-
-/*******************************************************************************
 
 *******************************************************************************/
 
@@ -73,11 +62,17 @@ oEbmlDeclSlice get_ebml_header_decl_o( oVarEbmlDeclSlice buf )
    buf.s = set_ebml_decl_slice_c( buf, src );
    if ( buf.s != src.s )
    {
-      return (oEbmlDeclSlice)invalid_slice_c_();
+      return (oEbmlDeclSlice)invalid_c_();
    }
 
-   return as_ebml_decl_slice_c( buf );
+   return as_c_( oEbmlDeclSlice, buf );
 }
+
+SET_SLICE_C_(
+   set_ebml_decl_slice_c,  // FuncName
+   oVarEbmlDeclSlice,      // VarSliceType
+   oEbmlDeclSlice          // SliceType
+)
 
 bool write_ebml_decl_o( cRecorder rec[static 1],
                         oEbmlDecl const decl[static 1],

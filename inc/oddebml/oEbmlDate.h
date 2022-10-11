@@ -19,12 +19,10 @@ typedef struct oEbmlDate oEbmlDate;
  generated
 *******************************************************************************/
 
-SLICE_DEF_C_(
-   oEbmlDate,               // Type
-   oEbmlDateSlice,          // SliceType
-   ebml_date_slice_o,       // FuncName
-   oVarEbmlDateSlice,       // VarSliceType
-   var_ebml_date_slice_o    // VarFuncName
+SLICES_C_(
+   oEbmlDate,           // Type
+   oEbmlDateSlice,      // SliceType
+   oVarEbmlDateSlice    // VarSliceType
 )
 
 /*******************************************************************************

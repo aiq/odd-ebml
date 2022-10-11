@@ -11,11 +11,11 @@ static cChars get_file_path_arg( int argc,
    if ( argc < 2 )
    {
       println_c_( "missing ebml file path" );
-      return (cChars)invalid_slice_c_();
+      return (cChars)invalid_c_();
    } else if ( argc > 2 )
    {
       println_c_( "expect only one ebml file path" );
-      return (cChars)invalid_slice_c_();
+      return (cChars)invalid_c_();
    }
    return c_c( argv[1] );
 }

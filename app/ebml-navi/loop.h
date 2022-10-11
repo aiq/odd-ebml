@@ -53,7 +53,7 @@ static bool loop( NaviCtx ctx[static 1] )
          continue;
       }
 
-      cChars inp = as_chars_c( line );
+      cChars inp = as_c_( cChars, line );
       if ( chars_is_c( inp, "b" ) ) //------------------------------------------
       {
          if ( is_empty_c_( ctx->history ) )
@@ -61,7 +61,8 @@ static bool loop( NaviCtx ctx[static 1] )
             println_c_( "no history where you can go back" );
             continue;
          }
-         pop_ebml_marker_o( &(ctx->history), &(trav->marker) );
+         trav->marker = last_c_( ctx->history );
+         ctx->history.s -= 1;
          if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) )
             return false;
       }
@@ -109,7 +110,7 @@ static bool loop( NaviCtx ctx[static 1] )
          if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) )
             return false;
 
-         push_ebml_marker_o( &(ctx->history), prev );
+         put_ebml_marker_o( &(ctx->history), prev );
       }
       else if ( chars_is_c( inp, "c" ) ) //-------------------------------------
       {
@@ -135,7 +136,7 @@ static bool loop( NaviCtx ctx[static 1] )
          if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) )
             return false;
 
-         push_ebml_marker_o( &(ctx->history), prev );
+         put_ebml_marker_o( &(ctx->history), prev );
       }
       else if ( chars_is_c( inp, "r" ) ) //-------------------------------------
       {
@@ -143,7 +144,7 @@ static bool loop( NaviCtx ctx[static 1] )
          if ( buf.v == NULL ) return false;
       
          bool ok = fget_ebml_bytes_o( trav, &buf );
-         if ( ok ) println_c_( "r: {bs}", as_bytes_c( buf ) );
+         if ( ok ) println_c_( "r: {bs}", as_c_( cBytes, buf ) );
          free( buf.v );
          if ( not ok ) return push_ebml_trav_error_o( ctx->es, trav );
       }
@@ -155,7 +156,7 @@ static bool loop( NaviCtx ctx[static 1] )
          {
             println_c_(
                "not able to parse ID from {cs:Q}",
-               mid_chars_c( inp, 2 )
+               mid_c_( cChars, inp, 2 )
             );
             continue;
          }
@@ -170,7 +171,7 @@ static bool loop( NaviCtx ctx[static 1] )
                if ( not handle_decl( ctx->declMap, &(trav->marker), &decl ) )
                   return false;
 
-               push_ebml_marker_o( &(ctx->history), prev );
+               put_ebml_marker_o( &(ctx->history), prev );
                break;
             }
          }

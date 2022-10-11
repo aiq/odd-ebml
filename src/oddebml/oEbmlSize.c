@@ -49,18 +49,6 @@ static uint64_t const O_UnknownValues[] = {
 int64_t O_MaxEbmlSize = 0x00ffffffffffffffL;
 
 /*******************************************************************************
- generated
-*******************************************************************************/
-
-SLICE_IMPL_C_(
-   oEbmlSize,              // Type
-   oEbmlSizeSlice,         // SliceType
-   ebml_size_slice_o,      // FuncName
-   oVarEbmlSizeSlice,      // VarSliceType
-   var_ebml_size_slice_o   // VarFuncName
-)
-
-/*******************************************************************************
 ********************************************************************* Functions
 ********************************************************************************
  init
@@ -131,7 +119,7 @@ int8_t ebml_size_length_o( oEbmlSize size )
 
 bool ebml_size_is_unknown_o( oEbmlSize size )
 {
-   cUint64Slice unknowns = uint64_slice_c( 8, O_UnknownValues );
+   cUint64Slice unknowns = { 8, O_UnknownValues };
    for_each_c_( uint64_t const*, u, unknowns )
    {
       if ( size.raw == *u )
@@ -199,7 +187,7 @@ bool record_ebml_size_o( cRecorder rec[static 1], oEbmlSize size )
 
    union vint64Mixer mixer;
    mixer.u = swap_uint64_to_c( size.raw, c_BigEndian );
-   return record_bytes_c( rec, bytes_c( len, mixer.arr + shift ) );
+   return record_bytes_c( rec, (cBytes){ len, mixer.arr + shift } );
 }
 
 bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] )

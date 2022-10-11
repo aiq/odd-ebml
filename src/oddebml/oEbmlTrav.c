@@ -105,7 +105,7 @@ bool fget_ebml_int_o( oEbmlTrav trav[static 1], int64_t val[static 1] )
    cVarBytes buf = scalars_c_( 8, cByte );
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    return ebml_as_int_o( &elem, val );
 }
 
@@ -119,7 +119,7 @@ bool fget_ebml_uint_o( oEbmlTrav trav[static 1], uint64_t val[static 1] )
    cVarBytes buf = scalars_c_( 8, cByte );
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    return ebml_as_uint_o( &elem, val );
 }
 
@@ -135,16 +135,16 @@ bool fget_ebml_float_o( oEbmlTrav trav[static 1], double val[static 1] )
    cVarBytes buf = scalars_c_( 8, cByte );
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    return ebml_as_float_o( &elem, val );
 }
 
 bool fget_ebml_string_o( oEbmlTrav trav[static 1], cVarChars val[static 1] )
 {
-   cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
+   cVarBytes buf = { val->s, (void*)val->v };
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    cChars chars;
    if ( not ebml_as_string_o( &elem, &chars ) ) return false;
 
@@ -154,10 +154,10 @@ bool fget_ebml_string_o( oEbmlTrav trav[static 1], cVarChars val[static 1] )
 
 bool fget_ebml_utf8_o( oEbmlTrav trav[static 1], cVarChars val[static 1] )
 {
-   cVarBytes buf = var_bytes_c( val->s, (void*)val->v );
+   cVarBytes buf = { val->s, (void*)val->v };
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    cChars chars;
    if ( not ebml_as_utf8_o( &elem, &chars ) ) return false;
 
@@ -175,7 +175,7 @@ bool fget_ebml_date_o( oEbmlTrav trav[static 1], oEbmlDate val[static 1] )
    cVarBytes buf = scalars_c_( 8, cByte );
    if ( not fget_ebml_bytes_o( trav, &buf ) ) return false;
 
-   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_bytes_c( buf ) );
+   oEbmlElement elem = ebml_element_o_( trav->marker.id, as_c_( cBytes, buf ) );
    return ebml_as_date_o( &elem, val );
 }
 

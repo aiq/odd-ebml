@@ -1,10 +1,7 @@
 #include "clingo/lang/expect.h"
 #include "oddebml/oEbmlDate.h"
 
-#include "clingo/io/print.h"
-#define pln_( ... ) pjotln_c_( xyz, 1024, __VA_ARGS__ )
-
-TEMP_SLICE_DEF_C_(
+TEMP_SLICE_C_(
    test,
    {
       cTime inp;

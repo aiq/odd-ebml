@@ -22,18 +22,6 @@ static uint32_t const O_ValMasks[] = {
 /*******************************************************************************
 ********************************************************* Types and Definitions
 ********************************************************************************
- generated
-*******************************************************************************/
-
-SLICE_IMPL_C_(
-   oEbmlId,             // Type
-   oEbmlIdSlice,        // SliceType
-   ebml_id_slice_o,     // FuncName
-   oVarEbmlIdSlice,     // VarSliceType
-   var_ebml_id_slice_o  // VarFuncName
-)
-
-/*******************************************************************************
 
 *******************************************************************************/
 
@@ -178,7 +166,7 @@ bool record_ebml_id_o( cRecorder rec[static 1], oEbmlId id )
 
    union vint32Mixer mixer;
    mixer.u = swap_uint32_to_c( id.raw, c_BigEndian );
-   return record_bytes_c( rec, bytes_c( len, mixer.arr + shift ) );
+   return record_bytes_c( rec, (cBytes){ len, mixer.arr + shift } );
 }
 
 bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] )

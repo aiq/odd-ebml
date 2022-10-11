@@ -27,28 +27,28 @@ static inline cBytes fscan_vint_o( FILE* f,
    if ( c == EOF )
    {
       push_error_c_( es, &C_Eof );
-      return (cBytes)invalid_slice_c_();
+      return (cBytes)invalid_c_();
    }
    uint8_t first;
    if ( not int64_to_uint8_c( c, &first ) )
    {
       push_lit_error_c( es, "invalid first byte" );
-      return (cBytes)invalid_slice_c_();
+      return (cBytes)invalid_c_();
    }
 
    int64_t size = vint_scan_size_o( first, checkBytes );
    if ( not in_range_c_( 1, size, buf.s ) )
    {
       push_lit_error_c( es, "not enough buffer space" );
-      return (cBytes)invalid_slice_c_();
+      return (cBytes)invalid_c_();
    }
 
    buf.v[0] = first;
    buf.s = size;
-   cBytes res = as_bytes_c( buf );
+   cBytes res = as_c_( cBytes, buf );
    if ( res.s == 1 ) return res;
 
-   buf = mid_var_bytes_c( buf, 1 );
+   buf = mid_c_( cVarBytes, buf, 1 );
    if ( not fget_bytes_c( f, &buf ) ) 
    {
       if ( feof( f ) != 0 )
@@ -59,7 +59,7 @@ static inline cBytes fscan_vint_o( FILE* f,
       {
          push_file_error_c( es, f );
       }
-      return (cBytes)invalid_slice_c_();
+      return (cBytes)invalid_c_();
    }
 
    return res;

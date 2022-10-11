@@ -22,12 +22,10 @@ typedef struct oEbmlId oEbmlId;
  generated
 *******************************************************************************/
 
-SLICE_DEF_C_(
-   oEbmlId,             // Type
-   oEbmlIdSlice,        // SliceType
-   ebml_id_slice_o,     // FuncName
-   oVarEbmlIdSlice,     // VarSliceType
-   var_ebml_id_slice_o  // VarFuncName
+SLICES_C_(
+   oEbmlId,          // Type
+   oEbmlIdSlice,     // SliceType
+   oVarEbmlIdSlice   // VarSliceType
 )
 
 /*******************************************************************************

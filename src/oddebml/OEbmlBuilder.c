@@ -1,6 +1,6 @@
 #include "oddebml/OEbmlBuilder.h"
 
-#include "_/stack.h"
+#include "clingo/container/pile.h"
 #include "clingo/io/cRecorder.h"
 #include "clingo/type/double.h"
 #include "clingo/type/float.h"
@@ -28,12 +28,17 @@ static inline oEbmlBuilderMarker ebml_builder_marker_o( oEbmlId id, int64_t pos 
    return (oEbmlBuilderMarker){ .id=id, .pos=pos };
 }
 
-STATIC_STACK_IMPL_C_(
-   __attribute__((unused)),      // Attr
-   oEbmlBuilderMarker,           // Type
-   oEbmlBuilderMarkerStack,      // StackType
-   ebml_builder_marker_o,        // FuncSuffix
-   ebml_builder_marker_stack_o   // StackFuncSuffix
+STATIC_VAL_PILE_IMPL_C_(
+   __attribute__((unused)),   // Attr
+   oEbmlBuilderMarker,        // Type
+   oEbmlBuilderMarkerPile,    // PileType
+   ebml_builder_marker_o      // FuncSuffix
+)
+
+static TAKE_C_(
+   take_ebml_builder_marker_o,   // FuncName
+   oEbmlBuilderMarkerPile,       // SliceType
+   oEbmlBuilderMarker            // ValueType
 )
 
 /*******************************************************************************
@@ -44,7 +49,7 @@ STATIC_STACK_IMPL_C_(
 
 struct OEbmlBuilder
 {
-   oEbmlBuilderMarkerStack stack;
+   oEbmlBuilderMarkerPile pile;
    cRecorder rec;
 };
 
@@ -58,9 +63,9 @@ static inline void cleanup( void* instance )
       free( b->rec.mem );
    }
 
-   if ( b->stack.v )
+   if ( b->pile.v )
    {
-      free( b->stack.v );
+      free( b->pile.v );
    }
 }
 
@@ -86,7 +91,7 @@ OEbmlBuilder* make_ebml_builder_o( int64_t cap )
       return NULL;
    }
 
-   if ( not alloc_ebml_builder_marker_stack_o( &(result->stack), 8 ) or
+   if ( not alloc_pile_of_ebml_builder_marker_o( &(result->pile), 8 ) or
         not alloc_recorder_mem_c( &(result->rec), cap ) )
    {
       release_c( result );
@@ -119,7 +124,7 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
    must_exist_c_( b );
 
    oEbmlBuilderMarker marker = ebml_builder_marker_o( id, b->rec.pos );
-   if ( not push_ebml_builder_marker_o( &(b->stack), marker ) )
+   if ( not put_ebml_builder_marker_o( &(b->pile), marker ) )
    {
       return false;
    }
@@ -129,7 +134,7 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
         not record_ebml_size_o( &(b->rec), size ) )
    {
       oEbmlBuilderMarker marker;
-      pop_ebml_builder_marker_o( &(b->stack), &marker );
+      take_ebml_builder_marker_o( &(b->pile), b->pile.s-1, &marker );
       move_recorder_to_c( &(b->rec), oldPos );
       return false;
    }
@@ -141,7 +146,7 @@ static cVarBytes recorder_sub_bytes( cRecorder rec[static 1],
                                      int64_t min,
                                      int64_t max )
 {
-   cVarBytes invalid = invalid_slice_c_();
+   cVarBytes invalid = invalid_c_();
    int64_t initPos = rec->pos;
 
    if ( not move_recorder_to_c( rec, min ) )
@@ -159,14 +164,14 @@ static cVarBytes recorder_sub_bytes( cRecorder rec[static 1],
    cByte* end = rec->mem;
 
    move_recorder_to_c( rec, initPos );
-   return make_var_bytes_c( beg, end );
+   return (cVarBytes)atween_c_( beg, end );
 }
 
 bool finish_ebml_master_o( OEbmlBuilder* b )
 {
    must_exist_c_( b );
 
-   oEbmlBuilderMarkerStack* stack = &(b->stack);
+   oEbmlBuilderMarkerPile* pile = &(b->pile);
    cRecorder* rec = &(b->rec);
    cScanner* sca = &scanner_copy_c_( rec );
    cRange scope;
@@ -175,7 +180,7 @@ bool finish_ebml_master_o( OEbmlBuilder* b )
    once_c_( xsdlfjk )
    {
       oEbmlBuilderMarker marker;
-      if ( not pop_ebml_builder_marker_o( stack, &marker ) ) break;
+      if ( not take_ebml_builder_marker_o( pile, pile->s-1, &marker ) ) break;
 
       if ( not move_scanner_to_c( sca, marker.pos ) ) break;
 
@@ -233,7 +238,7 @@ static bool append( OEbmlBuilder* b, oEbmlId id, cBytes bytes )
 
    if ( rec->space < len )
    {
-      int64_t oldSize = max_c_( recorder_cap_c( rec ), bytes.s );
+      int64_t oldSize = imax64_c( recorder_cap_c( rec ), bytes.s );
       int64_t const newSize = oldSize * 2;
       if ( not realloc_recorder_mem_c( rec, newSize ) )
       {
@@ -334,13 +339,13 @@ bool append_ebml_float_o( OEbmlBuilder* b, oEbmlId id, double val )
 bool append_ebml_string_o( OEbmlBuilder* b, oEbmlId id, cChars val )
 {
    must_exist_c_( b );
-   return append( b, id, bytes_c( val.s, (cByte const*)val.v ) );
+   return append( b, id, (cBytes){ val.s, (cByte const*)val.v } );
 }
 
 bool append_ebml_utf8_o( OEbmlBuilder* b, oEbmlId id, cChars val )
 {
    must_exist_c_( b );
-   return append( b, id, bytes_c( val.s, (cByte const*)val.v ) );
+   return append( b, id, (cBytes){ val.s, (cByte const*)val.v } );
 }
 
 bool append_ebml_date_o( OEbmlBuilder* b, oEbmlId id, oEbmlDate val )
@@ -360,5 +365,5 @@ bool append_ebml_binary_o( OEbmlBuilder* b, oEbmlId id, cBytes val )
 bool append_empty_ebml_o( OEbmlBuilder* b, oEbmlId id )
 {
    must_exist_c_( b );
-   return append( b, id, empty_bytes_c() );
+   return append( b, id, (cBytes)empty_c_() );
 }

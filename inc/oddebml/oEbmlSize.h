@@ -24,12 +24,10 @@ ODDEBML_API extern int64_t O_MaxEbmlSize;
  generated
 *******************************************************************************/
 
-SLICE_DEF_C_(
-   oEbmlSize,               // Type
-   oEbmlSizeSlice,          // SliceType
-   ebml_size_slice_o,       // FuncName
-   oVarEbmlSizeSlice,       // VarSliceType
-   var_ebml_size_slice_o    // VarFuncName
+SLICES_C_(
+   oEbmlSize,           // Type
+   oEbmlSizeSlice,      // SliceType
+   oVarEbmlSizeSlice    // VarSliceType
 )
 
 /*******************************************************************************

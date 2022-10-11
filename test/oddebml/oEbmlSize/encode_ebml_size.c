@@ -2,7 +2,7 @@
 #include "clingo/lang/expect.h"
 #include "oddebml/oEbmlSize.h"
 
-TEMP_SLICE_DEF_C_(
+TEMP_SLICE_C_(
    test,
    {
       int64_t inp;
