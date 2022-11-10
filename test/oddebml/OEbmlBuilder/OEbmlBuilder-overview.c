@@ -20,7 +20,7 @@ int main( void )
    }
    finish_ebml_master_o( b );
 
-   expect_( built_ebml_c( b ),
+   expect_( built_ebml_o( b ),
       0x1a, 0x45, 0xdf, 0xa3, 0x8e, // EBML ID + size
       0x42, 0x86, 0x81, 0x01,       // EBMLVersion ID + size + value
       0x42, 0xf7, 0x81, 0x01,       // EBMLReadVersion ID + size + value

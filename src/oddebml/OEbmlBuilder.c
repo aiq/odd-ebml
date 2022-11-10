@@ -110,7 +110,7 @@ OEbmlBuilder* new_ebml_builder_o( void )
 
 *******************************************************************************/
 
-cBytes built_ebml_c( OEbmlBuilder* b )
+cBytes built_ebml_o( OEbmlBuilder* b )
 {
    return recorded_bytes_c( &(b->rec) );
 }
