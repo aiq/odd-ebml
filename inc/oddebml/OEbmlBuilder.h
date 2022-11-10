@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_BUILDER_H
-#define ODDEBML_EBML_BUILDER_H
+#ifndef ODDEBML_OEBMLBUILDER_H
+#define ODDEBML_OEBMLBUILDER_H
 
 #include "clingo/lang/CObject.h"
 #include "oddebml/apidecl.h"
@@ -31,7 +31,7 @@ ODDEBML_API OEbmlBuilder* new_ebml_builder_o( void );
 
 *******************************************************************************/
 
-ODDEBML_API cBytes built_ebml_c( OEbmlBuilder* b );
+ODDEBML_API cBytes built_ebml_o( OEbmlBuilder* b );
 
 /*******************************************************************************
 

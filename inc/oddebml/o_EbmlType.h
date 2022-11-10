@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_TYPE_H
-#define ODDEBML_EBML_TYPE_H
+#ifndef ODDEBML_OEBMLTYPE_H
+#define ODDEBML_OEBMLTYPE_H
 
 #include "oddebml/apidecl.h"
 

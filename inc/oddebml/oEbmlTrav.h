@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_TRAV_H
-#define ODDEBML_EBML_TRAV_H
+#ifndef ODDEBML_OEBMLTRAV_H
+#define ODDEBML_OEBMLTRAV_H
 
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlMarker.h"

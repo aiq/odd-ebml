@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_MARKER_H
-#define ODDEBML_EBML_MARKER_H
+#ifndef ODDEBML_OEBMLMARKER_H
+#define ODDEBML_OEBMLMARKER_H
 
 #include "clingo/lang/CObject.h"
 #include "clingo/lang/error.h"

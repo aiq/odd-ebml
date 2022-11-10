@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_ELEMENT_H
-#define ODDEBML_EBML_ELEMENT_H
+#ifndef ODDEBML_OEBMLELEMENT_H
+#define ODDEBML_OEBMLELEMENT_H
 
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlDate.h"

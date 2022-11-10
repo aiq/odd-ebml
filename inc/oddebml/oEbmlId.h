@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_ID_H
-#define ODDEBML_EBML_ID_H
+#ifndef ODDEBML_OEBMLID_H
+#define ODDEBML_OEBMLID_H
 
 #include "clingo/io/cRecorder.h"
 #include "clingo/io/cScanner.h"

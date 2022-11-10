@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_HEADER_H
-#define ODDEBML_EBML_HEADER_H
+#ifndef ODDEBML_OEBMLHEADER_H
+#define ODDEBML_OEBMLHEADER_H
 
 #include "clingo/io/cRecorder.h"
 #include "clingo/io/cScanner.h"

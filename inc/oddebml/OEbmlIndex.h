@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_INDEX_H
-#define ODDEBML_EBML_INDEX_H
+#ifndef ODDEBML_OEBMLINDEX_H
+#define ODDEBML_OEBMLINDEX_H
 
 #include "clingo/lang/CObject.h"
 #include "oddebml/apidecl.h"

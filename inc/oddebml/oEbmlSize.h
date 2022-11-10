@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_SIZE_H
-#define ODDEBML_EBML_SIZE_H
+#ifndef ODDEBML_OEBMLSIZE_H
+#define ODDEBML_OEBMLSIZE_H
 
 #include "clingo/io/cRecorder.h"
 #include "clingo/io/cScanner.h"

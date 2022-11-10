@@ -1,5 +1,5 @@
-#ifndef ODDEBML_EBML_DECL_MAP_H
-#define ODDEBML_EBML_DECL_MAP_H
+#ifndef ODDEBML_OEBMLDECLMAP_H
+#define ODDEBML_OEBMLDECLMAP_H
 
 #include "clingo/container/map.h"
 #include "oddebml/apidecl.h"
