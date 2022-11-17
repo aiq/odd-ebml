@@ -36,30 +36,3 @@ cErrorType const O_UnmarshalEdmlError = {
    .desc = stringify_c_( O_UnmarshalEdmlError ),
    .note = &note_unmarshal_ebml_error
 };
-
-/*******************************************************************************
-********************************************************************* Functions
-********************************************************************************
-
-*******************************************************************************/
-
-bool push_ebml_error_o( cErrorStack es[static 1] )
-{
-   return push_error_c_( es, &O_EbmlError );
-}
-
-bool push_missing_ebml_id_error_o( cErrorStack es[static 1], oEbmlId id )
-{
-   oMissingEdmlIdErrorData d = { .id=id };
-   int64_t dSize = sizeof_c_( oMissingEdmlIdErrorData );
-   return push_error_c( es, &O_MissingEdmlIdError, &d, dSize );
-}
-
-bool push_unmarshal_ebml_error_o( cErrorStack es[static 1],
-                                  oEbmlId id,
-                                  o_EbmlType type )
-{
-   oUnmarshalEdmlErrorData d = { .id=id, .type=type };
-   int64_t dSize = sizeof_c_( oUnmarshalEdmlErrorData );
-   return push_error_c( es, &O_UnmarshalEdmlError, &d, dSize );
-}

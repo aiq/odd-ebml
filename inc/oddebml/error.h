@@ -32,19 +32,4 @@ struct oUnmarshalEdmlErrorData
 };
 typedef struct oUnmarshalEdmlErrorData oUnmarshalEdmlErrorData;
 
-/*******************************************************************************
-********************************************************************* Functions
-********************************************************************************
-
-*******************************************************************************/
-
-ODDEBML_API bool push_ebml_error_o( cErrorStack es[static 1] );
-
-ODDEBML_API bool push_missing_ebml_id_error_o( cErrorStack es[static 1],
-                                               oEbmlId id );
-
-ODDEBML_API bool push_unmarshal_ebml_error_o( cErrorStack es[static 1],
-                                              oEbmlId id,
-                                              o_EbmlType type );
-
 #endif

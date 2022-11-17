@@ -1,5 +1,6 @@
 #include "oddebml/OEbmlBuilder.h"
 
+#include "_/error.h"
 #include "clingo/container/pile.h"
 #include "clingo/io/cRecorder.h"
 #include "clingo/type/double.h"
@@ -84,8 +85,7 @@ OEbmlBuilder* make_ebml_builder_o( int64_t cap )
 {
    must_be_positive_c_( cap );
 
-   cObjectInfo const info = default_object_info_c_( &O_EbmlBuilderMeta );
-   OEbmlBuilder* result = alloc_object_c_( OEbmlBuilder, &info );
+   OEbmlBuilder* result = new_object_c_( OEbmlBuilder, &O_EbmlBuilderMeta );
    if ( result == NULL )
    {
       return NULL;
@@ -110,8 +110,21 @@ OEbmlBuilder* new_ebml_builder_o( void )
 
 *******************************************************************************/
 
+bool push_ebml_builder_error_o( cErrorStack es[static 1], OEbmlBuilder* b )
+{
+   must_exist_c_( b );
+
+   return push_errno_error_c( es, ENOMEM ) ||
+          push_ebml_lit_error_o( es, "OEbmlBuilder" );
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
 cBytes built_ebml_o( OEbmlBuilder* b )
 {
+   must_exist_c_( b );
    return recorded_bytes_c( &(b->rec) );
 }
 
