@@ -1,6 +1,7 @@
 #ifndef ODDEBML_ERROR_H
 #define ODDEBML_ERROR_H
 
+#include "clingo/io/cScanner.h"
 #include "clingo/lang/CObject.h"
 #include "clingo/lang/error.h"
 #include "oddebml/apidecl.h"
@@ -31,5 +32,23 @@ struct oUnmarshalEdmlErrorData
    o_EbmlType type;
 };
 typedef struct oUnmarshalEdmlErrorData oUnmarshalEdmlErrorData;
+
+/*******************************************************************************
+********************************************************************* Functions
+********************************************************************************
+
+*******************************************************************************/
+
+ODDEBML_API bool push_missing_ebml_id_error_o( cErrorStack es[static 1],
+                                               oEbmlId id );
+
+ODDEBML_API bool push_unmarshal_ebml_error_o( cErrorStack es[static 1],
+                                              oEbmlId id,
+                                              o_EbmlType type );
+
+ODDEBML_API bool push_imp_ebml_error_o( cErrorStack es[static 1],
+                                        cScanner const sca[static 1],
+                                        oEbmlId id,
+                                        o_EbmlType type );
 
 #endif
