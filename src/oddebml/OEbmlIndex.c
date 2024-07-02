@@ -47,7 +47,7 @@ static inline void cleanup( void* instance )
    {
       uint32_t const* key;
       oEbmlMarkerPile* pile;
-      iterate_map_c_( itr, key, pile, i->map, next_var_in_index_map_o )
+      iterate_map_c_( itr, &key, &pile, i->map, next_var_in_index_map_o )
       {
          if ( not is_empty_c_( *pile ) )
          {
