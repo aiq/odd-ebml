@@ -1,7 +1,6 @@
 #include "oddebml/oEbmlSize.h"
 
 #include "_/misc.h"
-#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/write.h"
 #include "clingo/io/write_type.h"
 #include "clingo/type/int8.h"
@@ -120,7 +119,7 @@ int8_t ebml_size_length_o( oEbmlSize size )
 bool ebml_size_is_unknown_o( oEbmlSize size )
 {
    cUint64Slice unknowns = { 8, O_UnknownValues };
-   for_each_c_( uint64_t const*, u, unknowns )
+   each_c_( uint64_t const*, u, unknowns )
    {
       if ( size.raw == *u )
       {
@@ -151,7 +150,7 @@ bool fscan_ebml_size_o( FILE* f,
    cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
    return scan_ebml_size_o( sca, size )
       ? true
-      : push_imp_exp_error_c( es, sca->err );
+      : push_scanner_error_c( es, sca );
 }
 
 bool frecord_ebml_size_o( FILE* f,
@@ -163,7 +162,7 @@ bool frecord_ebml_size_o( FILE* f,
    cRecorder* rec = &recorder_c_( 8 );
    if ( not record_ebml_size_o( rec, size ) )
    {
-      return push_imp_exp_error_c( es, rec->err );
+      return push_recorder_error_c( es, rec );
    }
 
    return fput_bytes_c( f, recorded_bytes_c( rec ) )
@@ -194,18 +193,18 @@ bool scan_ebml_size_o( cScanner sca[static 1], oEbmlSize size[static 1] )
 {
    if ( sca->space == 0 )
    {
-      return set_scanner_error_c( sca, c_NotAbleToScanValue );
+      return set_scanner_error_c( sca, c_IncompleteScanValue );
    }
 
    cByte const* first = sca->mem;
    cBytes idBytes = view_bytes_c( sca, vint_scan_size_o( *first, checkBytes ) );
    if ( is_empty_c_( idBytes) )
    {
-      return set_scanner_error_c( sca, c_NotAbleToScanValue );
+      return set_scanner_error_c( sca, c_IncompleteScanValue );
    }
 
    union vint64Mixer mixer;
-   cRecorder* rec = &make_recorder_c_( 8, mixer.arr );
+   cRecorder* rec = &make_fix_recorder_c_( 8, mixer.arr );
    record_pad_c( rec, 0x00, 8-idBytes.s );
    record_bytes_c( rec, idBytes );
    size->raw = swap_uint64_from_c( mixer.u, c_BigEndian );

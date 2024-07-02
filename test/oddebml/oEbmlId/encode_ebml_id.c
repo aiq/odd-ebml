@@ -21,14 +21,16 @@ int main( void )
       t_( 0x286, 0x4286 )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       oEbmlId id = encode_ebml_id_o( t->inp );
       bool res = id.raw == t->exp;
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {u32:x}, got {u32:x}", t->exp, id.raw );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{u32:x}", t->exp );
+         tap_exp_line_c_( "{u32:x}", id.raw );
+      }
    }
 
    return finish_tap_c_();

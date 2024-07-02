@@ -1,7 +1,6 @@
 #include "oddebml/oEbmlMarker.h"
 
 #include "_/misc.h"
-#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/FILE.h"
 #include "oddebml/oEbmlElement.h"
 
@@ -45,13 +44,13 @@ bool fscan_ebml_marker_o( FILE* f,
    {
       if ( es->err->type == &C_Eof ) return false;
 
-      return push_import_error_c( es, "EBML ID" );
+      return push_lit_error_c( es, "EBML ID");
    }
 
    oEbmlSize size;
    if ( not fscan_ebml_size_o( f, &size, es ) )
    {
-      return push_import_error_c( es, "EBML Size" );
+      return push_lit_error_c( es, "EBML Size" );
    }
 
    fpos_t pos;

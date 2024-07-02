@@ -26,14 +26,16 @@ int main( void )
       t_( 0x407f, true )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       oEbmlId id = ebml_id_o( t->raw );
       bool res = ebml_id_is_valid_o( id ) == t->exp;
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {bool} for {u32:x}", t->exp, t->raw );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{bool}", t->exp );
+         tap_line_c_( "input", "{u32:x}", t->raw );
+      }
    }
 
    return finish_tap_c_();

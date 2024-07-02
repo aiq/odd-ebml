@@ -28,13 +28,15 @@ int main( void )
       t_( unknown_ebml_size_o( 9 ), false )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       bool res = ebml_size_is_unknown_o( t->size ) == t->exp;
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {bool} for {u32:x}", t->exp, t->size.raw );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{bool}", t->exp );
+         tap_line_c_( "input", "{u32:x}", t->size.raw );
+      }
    }
 
    return finish_tap_c_();

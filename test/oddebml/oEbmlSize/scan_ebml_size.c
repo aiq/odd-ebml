@@ -27,16 +27,18 @@ int main( void )
       t_( slice_c_( cByte, 0xfa, 0x00 ), 0xfa )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       cScanner* sca = &make_scanner_c_( t->inp.s, t->inp.v );
       oEbmlSize size;
       bool res = scan_ebml_size_o( sca, &size );
       res &= eq_c( cmp_ebml_size_o( size, ebml_size_o( t->exp ) ) );
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {u64:x}, got {u64:x}", t->exp, size.raw );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{u:x}", t->exp );
+         tap_got_line_c_( "{u:x}", size.raw );
+      }
    }
 
    return finish_tap_c_();

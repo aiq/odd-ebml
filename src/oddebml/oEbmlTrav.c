@@ -1,7 +1,8 @@
 #include "oddebml/oEbmlTrav.h"
 
-#include "clingo/io/c_ImpExpError.h"
+#include <limits.h>
 #include "clingo/io/FILE.h"
+#include "clingo/io/cScanner.h"
 #include "oddebml/oEbmlElement.h"
 
 /*******************************************************************************
@@ -60,8 +61,8 @@ bool visit_ebml_child_o( oEbmlTrav const master[static 1],
 
 *******************************************************************************/
 
-#define NotEnoughSpaceErrorCode_ (c_CustomImpExpError+1)
-#define FileErrorCode_ (c_CustomImpExpError+2)
+#define NotEnoughSpaceErrorCode_ INT_MAX-1
+#define FileErrorCode_ INT_MAX-2
 static inline bool set_error( oEbmlTrav trav[static 1], int err )
 {
    trav->err = err;
@@ -99,7 +100,7 @@ bool fget_ebml_int_o( oEbmlTrav trav[static 1], int64_t val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) )
    {
-      return set_error( trav, c_NotAbleToScanValue );
+      return set_error( trav, c_IncompleteScanValue );
    }
 
    cVarBytes buf = scalars_c_( 8, cByte );
@@ -113,7 +114,7 @@ bool fget_ebml_uint_o( oEbmlTrav trav[static 1], uint64_t val[static 1] )
 {
    if ( not in_range_c_( 0, trav->marker.size, 8 ) )
    {
-      return set_error( trav, c_NotAbleToScanValue );
+      return set_error( trav, c_IncompleteScanValue );
    }
 
    cVarBytes buf = scalars_c_( 8, cByte );
@@ -129,7 +130,7 @@ bool fget_ebml_float_o( oEbmlTrav trav[static 1], double val[static 1] )
         trav->marker.size != 4 and
         trav->marker.size != 8 )
    {
-      return set_error( trav, c_NotAbleToScanValue );
+      return set_error( trav, c_IncompleteScanValue );
    }
 
    cVarBytes buf = scalars_c_( 8, cByte );
@@ -169,7 +170,7 @@ bool fget_ebml_date_o( oEbmlTrav trav[static 1], oEbmlDate val[static 1] )
 {
    if ( trav->marker.size != 0 and trav->marker.size != 8 )
    {
-      return set_error( trav, c_NotAbleToScanValue );
+      return set_error( trav, c_IncompleteScanValue );
    }
 
    cVarBytes buf = scalars_c_( 8, cByte );
@@ -186,18 +187,16 @@ bool fget_ebml_date_o( oEbmlTrav trav[static 1], oEbmlDate val[static 1] )
 bool push_ebml_trav_error_o( cErrorStack es[static 1],
                              oEbmlTrav trav[static 1] )
 {
-   if ( trav->err <= c_CustomImpExpError )
+   if ( trav->err == FileErrorCode_ )
    {
-      return push_imp_exp_error_c( es, trav->err );
+      return push_file_error_c( es, trav->file );
    }
    else if ( trav->err == NotEnoughSpaceErrorCode_ )
    {
       return push_error_c_( es, &C_NotEnoughBufferError );
    }
-   else if ( trav->err == FileErrorCode_)
-   {
-      return push_file_error_c( es, trav->file );
-   }
 
-   return push_lit_error_c( es, "unkown error code" );
+   cScanner tmp;
+   tmp.err = trav->err;
+   return push_scanner_error_c( es, &tmp );
 }

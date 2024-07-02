@@ -22,14 +22,16 @@ int main( void )
       t_( 0xfa, 1 )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       int8_t len = ebml_id_length_o( ebml_id_o( t->raw ) );
       bool res = len == t->exp;
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {i8}, got {i8}", t->exp, len );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{i8}", t->exp );
+         tap_got_line_c_( "{i8}", len );
+      }
    }
 
    return finish_tap_c_();

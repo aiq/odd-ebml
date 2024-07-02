@@ -74,8 +74,7 @@ static bool loop( NaviCtx ctx[static 1] )
             continue;
          }
          println_c_( "history with {i64} elements", ctx->history.s );
-         int64_t i = 0;
-         for_each_c_( oEbmlMarker const*, m, ctx->history )
+         for_each_c_( i, oEbmlMarker const*, m, ctx->history )
          {
             oEbmlDecl const* decl = get_from_ebml_decl_map_o( ctx->declMap,
                                                               m->id );
@@ -84,7 +83,6 @@ static bool loop( NaviCtx ctx[static 1] )
                "- {u32:x} {s} @ {i64}",
                m->id.raw, decl->name, m->pos
             );
-            ++i;
          }
       }
       else if ( chars_is_c( inp, "d" ) ) //-------------------------------------

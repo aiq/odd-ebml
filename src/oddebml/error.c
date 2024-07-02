@@ -1,7 +1,6 @@
 #include "oddebml/error.h"
 
 #include "_/error.h"
-#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/write.h"
 
 /*******************************************************************************
@@ -68,6 +67,6 @@ bool push_imp_ebml_error_o( cErrorStack es[static 1],
                             oEbmlId id,
                             o_EbmlType type )
 {
-   return push_imp_exp_error_c( es, sca->err ) ||
+   return push_scanner_error_c( es, sca ) ||
           push_unmarshal_ebml_error_o( es, id, type );
 }

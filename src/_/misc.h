@@ -6,11 +6,11 @@
 
 static inline int64_t vint_scan_size_o( cByte first, cBytes checkBytes )
 {
-   for_each_c_( cByte const*, check, checkBytes )
+   for_each_c_( i, cByte const*, check, checkBytes )
    {
       if ( first >= *check )
       {
-         return index_of_c_( checkBytes, check ) + 1;
+         return i+1;
       }
    }
    return 0;

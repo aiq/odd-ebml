@@ -1,7 +1,6 @@
 #include "oddebml/oEbmlId.h"
 
 #include "_/misc.h"
-#include "clingo/io/c_ImpExpError.h"
 #include "clingo/io/write.h"
 #include "clingo/io/write_type.h"
 #include "clingo/type/int32.h"
@@ -125,7 +124,7 @@ bool fscan_ebml_id_o( FILE* f, oEbmlId id[static 1], cErrorStack es[static 1] )
    cScanner* sca = &make_scanner_c_( bytes.s, bytes.v );
    return scan_ebml_id_o( sca, id )
       ? true
-      : push_imp_exp_error_c( es, sca->err );
+      : push_scanner_error_c( es, sca );
 }
 
 bool frecord_ebml_id_o( FILE* f, oEbmlId id, cErrorStack es[static 1] )
@@ -135,7 +134,7 @@ bool frecord_ebml_id_o( FILE* f, oEbmlId id, cErrorStack es[static 1] )
    cRecorder* rec = &recorder_c_( 4 );
    if ( not record_ebml_id_o( rec, id ) )
    {
-      return push_imp_exp_error_c( es, rec->err );
+      return push_recorder_error_c( es, rec );
    }
 
    return fput_bytes_c( f, recorded_bytes_c( rec ) )
@@ -173,18 +172,18 @@ bool scan_ebml_id_o( cScanner sca[static 1], oEbmlId id[static 1] )
 {
    if ( sca->space == 0 )
    {
-      return set_scanner_error_c( sca, c_NotAbleToScanValue );
+      return set_scanner_error_c( sca, c_IncompleteScanValue );
    }
 
    cByte const* first = sca->mem;
    cBytes idBytes = view_bytes_c( sca, vint_scan_size_o( *first, checkBytes ) );
    if ( is_empty_c_( idBytes ) )
    {
-      return set_scanner_error_c( sca, c_NotAbleToScanValue );
+      return set_scanner_error_c( sca, c_IncompleteScanValue );
    }
 
    union vint32Mixer mixer;
-   cRecorder* rec = &make_recorder_c_( 4, mixer.arr );
+   cRecorder* rec = &make_fix_recorder_c_( 4, mixer.arr );
    record_pad_c( rec, 0x00, 4-idBytes.s );
    record_bytes_c( rec, idBytes );
    id->raw = swap_uint32_from_c( mixer.u, c_BigEndian );
@@ -211,5 +210,5 @@ bool write_ebml_id_o( cRecorder rec[static 1],
          " .len={i16} }", ebml_id_length_o( id )
       );
    }
-   return set_recorder_error_c( rec, c_InvalidFormatString );
+   return set_recorder_error_c( rec, c_InvalidWriteFormat );
 }

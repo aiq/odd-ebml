@@ -96,7 +96,7 @@ bool ebml_as_string_o( oEbmlElement const elem[static 1],
       bin.s--;
    }
 
-   for_each_c_( cByte const*, b, bin )
+   each_c_( cByte const*, b, bin )
    {
       if ( not in_range_c_( 0x20, *b, 0x7E ) ) return false;;
    }

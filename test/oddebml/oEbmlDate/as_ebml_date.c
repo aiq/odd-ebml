@@ -23,10 +23,10 @@ int main( void )
           (oEbmlDate){ ._v=INT64_MAX } )
    );
 
-   for_each_c_( test const*, t, tests )
+   each_c_( test const*, t, tests )
    {
       oEbmlDate res = as_ebml_date_o( t->inp );
-      expect_c_( eq_ebml_date_c( res, t->exp ) );
+      expect_at_c_( eq_ebml_date_c( res, t->exp ) );
    }
 
    return finish_tap_c_();

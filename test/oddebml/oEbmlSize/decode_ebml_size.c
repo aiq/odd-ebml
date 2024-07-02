@@ -23,14 +23,16 @@ int main( void )
       t_( 0xfa, 0x7a )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       int64_t val = decode_ebml_size_o( ebml_size_o( t->raw ) );
       bool res = val == t->exp;
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {i64:x}, got {i64:x}", t->exp, val );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{i:x}", t->exp );
+         tap_got_line_c_( "{i:x}", val );
+      }
    }
 
    return finish_tap_c_();

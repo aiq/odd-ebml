@@ -34,7 +34,7 @@ bool fill_ebml_decl_map_o( OEbmlDeclMap* map, oEbmlDeclSlice slice )
 {
    must_exist_c_( map );
 
-   for_each_c_( oEbmlDecl const*, decl, slice )
+   each_c_( oEbmlDecl const*, decl, slice )
    {
       if ( not set_on_ebml_decl_map_o( map, decl->id, *decl ) ) return false;
    }

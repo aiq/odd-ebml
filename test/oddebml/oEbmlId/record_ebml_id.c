@@ -22,15 +22,17 @@ int main( void )
       t_( 0xfa, slice_c_( cByte, 0xfa ) )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       cRecorder* buf = &recorder_c_( 64 );
       bool res = record_ebml_id_o( buf, ebml_id_o( t->raw ) );
       res &= eq_c( cmp_bytes_c( recorded_bytes_c( buf ), t->exp ) );
 
-      cRecorder* rec = &recorder_c_( 64 );
-      write_c_( rec, "expected {bs:X/c/8}, got {bs:X/c/8}", t->exp, recorded_bytes_c( buf ) );
-      tap_desc_c( res, turn_into_cstr_c( rec ) );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{bs:X/c/8}", t->exp );
+         tap_got_line_c_( "{bs:X/c/8}", recorded_bytes_c( buf ) );
+      }
    }
 
    return finish_tap_c_();
