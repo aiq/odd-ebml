@@ -17,33 +17,27 @@ typedef struct
    cScanner valueSca;
 } argsDef;
 
+#define eprint_( ... )                                                         \
+   println_c_(__VA_ARGS__) and false
+
+#define failln_( ... )                                                         \
+   println_c_(__VA_ARGS__) ? EXIT_FAILURE : EXIT_FAILURE
+
 bool init_args( int argc, char* argv[], argsDef args[static 1] )
 {
    if ( argc < 4 )
-   {
-      println_c_( "not enough arguments: number of arguments {i64}", argc );
-      return false;
-   }
+      return eprint_( "not enough arguments: number of arguments {i64}", argc );
    
    if ( argc > 4 )
-   {
-      println_c_( "to much arguments: number of arguments {i64}", argc );
-      return false;
-   }
+      return eprint_( "to much arguments: number of arguments {i64}", argc );
 
    cChars action = c_c( argv[1] );
    if ( not chars_is_c( action, "dec" ) and not chars_is_c( action, "enc" ) )
-   {
-      println_c_( "invalid $action value: {cs:Q}", action );
-      return false;
-   }
+      return eprint_( "invalid $action value: {cs:Q}", action );
 
    cChars format = c_c( argv[2] );
    if ( not chars_is_c( format, "-x" ) and not chars_is_c( format, "-d" ) )
-   {
-      println_c_( "invalid $format value: {cs:Q}", format );
-      return false;
-   }
+      return eprint_( "invalid $format value: {cs:Q}", format );
 
    args->action = action;
    args->format = chars_is_c( format, "-x" ) ? "x" : "d";
@@ -66,10 +60,7 @@ int main( int argc, char* argv[] )
    {
       uint64_t raw;
       if ( not read_uint64_c( &(args.valueSca), &raw, "x" ) )
-      {
-         println_c_( "not able to read EBML VINT: {cs}", unscanned_chars_c_( &(args.valueSca) ) );
-         return EXIT_FAILURE;
-      }
+         return failln_( "not able to read EBML VINT: {cs}", unscanned_chars_c_( &(args.valueSca) ) );
 
       oEbmlSize ebmlVal = ebml_size_o( raw );
       int64_t val = decode_ebml_size_o( ebmlVal );
@@ -86,16 +77,10 @@ int main( int argc, char* argv[] )
    {
       int64_t val;
       if ( not read_int64_c( &(args.valueSca), &val, args.format ) )
-      {
-         println_c_( "not able to read number: {cs}", unscanned_chars_c_( &(args.valueSca ) ) );
-         return EXIT_FAILURE;
-      }
+         return failln_( "not able to read number: {cs}", unscanned_chars_c_( &(args.valueSca ) ) );
 
       if ( val < 0 )
-      {
-         println_c_( "negative failures are not allowed: {i64}", val );
-         return EXIT_FAILURE;
-      }
+         return failln_( "negative failures are not allowed: {i64}", val );
 
       oEbmlSize ebmlVal = encode_ebml_size_o( val );
       println_c_( "{u64:x}", ebmlVal.raw );
