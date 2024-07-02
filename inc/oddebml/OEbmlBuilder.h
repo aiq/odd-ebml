@@ -25,6 +25,8 @@ typedef struct OEbmlBuilder OEbmlBuilder;
 
 ODDEBML_API OEbmlBuilder* make_ebml_builder_o( int64_t cap );
 
+ODDEBML_API OEbmlBuilder* make_ebml_builder_shell_o( cRecorder rec[static 1] );
+
 ODDEBML_API OEbmlBuilder* new_ebml_builder_o( void );
 
 /*******************************************************************************

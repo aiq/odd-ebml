@@ -51,17 +51,21 @@ static TAKE_C_(
 struct OEbmlBuilder
 {
    oEbmlBuilderMarkerPile pile;
-   cRecorder rec;
+   cRecorder ownRec;
+   cRecorder* rec;
 };
 
 static inline void cleanup( void* instance )
 {
    OEbmlBuilder* b = instance;
-   reset_recorder_c( &(b->rec) );
-
-   if ( b->rec.mem )
+   if ( &b->ownRec == b->rec )
    {
-      free( b->rec.mem );
+      reset_recorder_c( b->rec );
+
+      if ( b->rec->mem )
+      {
+         free( b->rec->mem );
+      }
    }
 
    if ( b->pile.v )
@@ -85,20 +89,38 @@ OEbmlBuilder* make_ebml_builder_o( int64_t cap )
 {
    must_be_positive_c_( cap );
 
-   OEbmlBuilder* result = new_object_c_( OEbmlBuilder, &O_EbmlBuilderMeta );
-   if ( result == NULL )
+   cRecorder rec;
+   if ( not alloc_recorder_mem_c( &rec, cap ) )
+      return NULL;
+
+   OEbmlBuilder* b = make_ebml_builder_shell_o( &rec );
+   if ( b == NULL )
+   {
+      free_recorder_mem_c( &rec );
+      return NULL;
+   }
+
+   b->ownRec = rec;
+   b->rec = &b->ownRec;
+   return b;
+}
+
+OEbmlBuilder* make_ebml_builder_shell_o( cRecorder rec[static 1] )
+{
+   OEbmlBuilder* b = new_object_c_( OEbmlBuilder, &O_EbmlBuilderMeta );
+   if ( b == NULL )
    {
       return NULL;
    }
 
-   if ( not alloc_pile_of_ebml_builder_marker_o( &(result->pile), 8 ) or
-        not alloc_recorder_mem_c( &(result->rec), cap ) )
+   if ( not alloc_pile_of_ebml_builder_marker_o( &(b->pile), 8 ) )
    {
-      release_c( result );
+      release_c( b );
       return NULL;
    }
 
-   return result;
+   b->rec = rec;
+   return b;
 }
 
 OEbmlBuilder* new_ebml_builder_o( void )
@@ -125,7 +147,7 @@ bool push_ebml_builder_error_o( cErrorStack es[static 1], OEbmlBuilder* b )
 cBytes built_ebml_o( OEbmlBuilder* b )
 {
    must_exist_c_( b );
-   return recorded_bytes_c( &(b->rec) );
+   return recorded_bytes_c( b->rec );
 }
 
 /*******************************************************************************
@@ -136,19 +158,19 @@ bool begin_ebml_master_o( OEbmlBuilder* b, oEbmlId id, oEbmlSize size )
 {
    must_exist_c_( b );
 
-   oEbmlBuilderMarker marker = ebml_builder_marker_o( id, b->rec.pos );
+   oEbmlBuilderMarker marker = ebml_builder_marker_o( id, b->rec->pos );
    if ( not put_ebml_builder_marker_o( &(b->pile), marker ) )
    {
       return false;
    }
 
-   int64_t oldPos = b->rec.pos;
-   if ( not record_ebml_id_o( &(b->rec), id ) or
-        not record_ebml_size_o( &(b->rec), size ) )
+   int64_t oldPos = b->rec->pos;
+   if ( not record_ebml_id_o( b->rec, id ) or
+        not record_ebml_size_o( b->rec, size ) )
    {
       oEbmlBuilderMarker marker;
       take_ebml_builder_marker_o( &(b->pile), b->pile.s-1, &marker );
-      move_recorder_to_c( &(b->rec), oldPos );
+      move_recorder_to_c( b->rec, oldPos );
       return false;
    }
 
@@ -185,11 +207,10 @@ bool finish_ebml_master_o( OEbmlBuilder* b )
    must_exist_c_( b );
 
    oEbmlBuilderMarkerPile* pile = &(b->pile);
-   cRecorder* rec = &(b->rec);
-   cScanner* sca = &scanner_copy_c_( rec );
+   cScanner* sca = &scanner_copy_c_( b->rec );
    cRange scope;
 
-   scope.max = rec->pos;
+   scope.max = b->rec->pos;
    once_c_( xsdlfjk )
    {
       oEbmlBuilderMarker marker;
@@ -211,28 +232,28 @@ bool finish_ebml_master_o( OEbmlBuilder* b )
       int64_t sizeDiff = ebml_size_length_o( size ) - ebml_size_length_o( tmpSize );
       if ( sizeDiff < 0 )
       {
-         cVarBytes bytes = recorder_sub_bytes( rec, scope.min+sizeDiff, scope.max );
+         cVarBytes bytes = recorder_sub_bytes( b->rec, scope.min+sizeDiff, scope.max );
          if ( is_invalid_c_( bytes ) ) break;
          shift_bytes_c( bytes, sizeDiff );
          scope.max += sizeDiff;
       }
       else if ( sizeDiff > 0 )
       {
-         if ( sizeDiff > rec->space )
+         if ( sizeDiff > b->rec->space )
          {
-            int64_t newCap = recorder_cap_c( rec ) * 2;
-            if ( not realloc_recorder_mem_c( rec, newCap ) ) break;
+            int64_t newCap = recorder_cap_c( b->rec ) * 2;
+            if ( not realloc_recorder_mem_c( b->rec, newCap ) ) break;
          }
-         cVarBytes bytes = recorder_sub_bytes( rec, scope.min, scope.max+sizeDiff );
+         cVarBytes bytes = recorder_sub_bytes( b->rec, scope.min, scope.max+sizeDiff );
          if ( is_invalid_c_( bytes ) ) break;
          shift_bytes_c( bytes, sizeDiff );
          scope.max += sizeDiff;
       }
 
-      move_recorder_to_c( rec, sizePos );
-      if ( not record_ebml_size_o( rec, size ) ) break;
+      move_recorder_to_c( b->rec, sizePos );
+      if ( not record_ebml_size_o( b->rec, size ) ) break;
 
-      return move_recorder_to_c( rec, scope.max );
+      return move_recorder_to_c( b->rec, scope.max );
    }
 
    return false;
@@ -244,24 +265,17 @@ bool finish_ebml_master_o( OEbmlBuilder* b )
 
 static bool append( OEbmlBuilder* b, oEbmlId id, cBytes bytes )
 {
-   cRecorder* rec = &(b->rec);
-
    oEbmlSize size = encode_ebml_size_o( bytes.s );
    int64_t len = ebml_id_length_o( id ) + ebml_size_length_o( size ) + bytes.s;
 
-   if ( rec->space < len )
+   if ( not ensure_recorder_space_c( b->rec, len ) )
    {
-      int64_t oldSize = imax64_c( recorder_cap_c( rec ), bytes.s );
-      int64_t const newSize = oldSize * 2;
-      if ( not realloc_recorder_mem_c( rec, newSize ) )
-      {
-         return false;
-      }
+      return false;
    }
 
-   return record_ebml_id_o( rec, id ) and
-      record_ebml_size_o( rec, size ) and
-      record_bytes_c( rec, bytes );
+   return record_ebml_id_o( b->rec, id ) and
+      record_ebml_size_o( b->rec, size ) and
+      record_bytes_c( b->rec, bytes );
 }
 
 bool append_ebml_element_o( OEbmlBuilder* b, oEbmlElement const elem[static 1] )
