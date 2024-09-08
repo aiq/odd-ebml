@@ -118,7 +118,7 @@ int8_t ebml_size_length_o( oEbmlSize size )
 
 bool ebml_size_is_unknown_o( oEbmlSize size )
 {
-   cUint64Slice unknowns = { 8, O_UnknownValues };
+   cUint64s unknowns = { 8, O_UnknownValues };
    each_c_( uint64_t const*, u, unknowns )
    {
       if ( size.raw == *u )

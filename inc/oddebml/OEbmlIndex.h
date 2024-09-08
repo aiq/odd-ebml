@@ -1,7 +1,7 @@
 #ifndef ODDEBML_OEBMLINDEX_H
 #define ODDEBML_OEBMLINDEX_H
 
-#include "clingo/lang/CObject.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/OEbmlDeclMap.h"
 #include "oddebml/oEbmlMarker.h"

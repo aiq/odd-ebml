@@ -1,6 +1,4 @@
-#include "clingo/io/write.h"
-#include "clingo/lang/expect.h"
-#include "oddebml/oEbmlId.h"
+#include "oddebml/oddebml.h"
 
 TEMP_SLICE_C_(
    test,

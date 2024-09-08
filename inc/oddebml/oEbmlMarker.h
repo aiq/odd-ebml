@@ -1,8 +1,7 @@
 #ifndef ODDEBML_OEBMLMARKER_H
 #define ODDEBML_OEBMLMARKER_H
 
-#include "clingo/lang/CObject.h"
-#include "clingo/lang/error.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlDate.h"
 #include "oddebml/oEbmlId.h"

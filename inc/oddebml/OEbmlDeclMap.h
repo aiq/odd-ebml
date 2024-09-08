@@ -1,7 +1,7 @@
 #ifndef ODDEBML_OEBMLDECLMAP_H
 #define ODDEBML_OEBMLDECLMAP_H
 
-#include "clingo/container/map.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlDecl.h"
 #include "oddebml/oEbmlId.h"

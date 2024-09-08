@@ -1,10 +1,7 @@
 #ifndef ODDEBML_OEBMLSIZE_H
 #define ODDEBML_OEBMLSIZE_H
 
-#include "clingo/io/cRecorder.h"
-#include "clingo/io/cScanner.h"
-#include "clingo/lang/error.h"
-#include "clingo/type/uint64.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 
 /*******************************************************************************

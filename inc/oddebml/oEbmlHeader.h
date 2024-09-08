@@ -1,8 +1,7 @@
 #ifndef ODDEBML_OEBMLHEADER_H
 #define ODDEBML_OEBMLHEADER_H
 
-#include "clingo/io/cRecorder.h"
-#include "clingo/io/cScanner.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/OEbmlBuilder.h"
 #include "oddebml/oEbmlElement.h"

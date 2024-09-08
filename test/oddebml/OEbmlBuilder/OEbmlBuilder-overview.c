@@ -1,6 +1,4 @@
-#include "clingo/lang/expect.h"
-#include "oddebml/OEbmlBuilder.h"
-#include "oddebml/oEbmlDecl.h"
+#include "oddebml/oddebml.h"
 
 #define expect_( Slice, ... )                                                  \
    expect_eq_c_( cmp_bytes_c_( (Slice), __VA_ARGS__ ) )

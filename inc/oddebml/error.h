@@ -1,9 +1,7 @@
 #ifndef ODDEBML_ERROR_H
 #define ODDEBML_ERROR_H
 
-#include "clingo/io/cScanner.h"
-#include "clingo/lang/CObject.h"
-#include "clingo/lang/error.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/o_EbmlType.h"
 #include "oddebml/oEbmlId.h"

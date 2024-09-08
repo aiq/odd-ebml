@@ -1,7 +1,7 @@
 #ifndef ODDEBML_OEBMLDATE_H
 #define ODDEBML_OEBMLDATE_H
 
-#include "clingo/time/cTime.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 
 /*******************************************************************************

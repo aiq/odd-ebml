@@ -1,7 +1,7 @@
 #ifndef ODDEBML_OEBMLBUILDER_H
 #define ODDEBML_OEBMLBUILDER_H
 
-#include "clingo/lang/CObject.h"
+#include "clingo/clingo.h"
 #include "oddebml/apidecl.h"
 #include "oddebml/oEbmlElement.h"
 #include "oddebml/oEbmlSize.h"
