@@ -42,7 +42,7 @@ struct NaviCtx
 };
 typedef struct NaviCtx NaviCtx;
 
-void deref_ctx( NaviCtx ctx[static 1], cErrorStack es[static 1] )
+void cleanup_ctx( NaviCtx ctx[static 1], cErrorStack es[static 1] )
 {
    if ( ctx->file != NULL ) close_file_c( ctx->file, es );
 
@@ -57,7 +57,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
    ctx->file = ropen_file_c( filePath, es );
    if ( ctx->file == NULL )
    {
-      deref_ctx( ctx, es );
+      cleanup_ctx( ctx, es );
       return false;
    }
 
@@ -65,7 +65,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
    {
       push_errno_error_c( es, ENOMEM );
       push_lit_error_c( es, "not able to allocate ctx.markerStack" );
-      deref_ctx( ctx, es );
+      cleanup_ctx( ctx, es );
       return false;
    }
 
@@ -74,7 +74,7 @@ bool init_ctx( NaviCtx ctx[static 1], cChars filePath, cErrorStack es[static 1] 
    {
       push_errno_error_c( es, ENOMEM );
       push_lit_error_c( es, "not able to allocate ctx.declMap" );
-      deref_ctx( ctx, es );
+      cleanup_ctx( ctx, es );
       return false;
    }
 

@@ -17,7 +17,7 @@ typedef struct
    cScanner valueSca;
 } argsDef;
 
-#define eprint_( ... )                                                         \
+#define errln_( ... )                                                          \
    println_c_(__VA_ARGS__) and false
 
 #define failln_( ... )                                                         \
@@ -26,18 +26,18 @@ typedef struct
 bool init_args( int argc, char* argv[], argsDef args[static 1] )
 {
    if ( argc < 4 )
-      return eprint_( "not enough arguments: number of arguments {i64}", argc );
+      return errln_( "not enough arguments: number of arguments {i64}", argc );
    
    if ( argc > 4 )
-      return eprint_( "to much arguments: number of arguments {i64}", argc );
+      return errln_( "to much arguments: number of arguments {i64}", argc );
 
    cChars action = c_c( argv[1] );
    if ( not chars_is_c( action, "dec" ) and not chars_is_c( action, "enc" ) )
-      return eprint_( "invalid $action value: {cs:Q}", action );
+      return errln_( "invalid $action value: {cs:Q}", action );
 
    cChars format = c_c( argv[2] );
    if ( not chars_is_c( format, "-x" ) and not chars_is_c( format, "-d" ) )
-      return eprint_( "invalid $format value: {cs:Q}", format );
+      return errln_( "invalid $format value: {cs:Q}", format );
 
    args->action = action;
    args->format = chars_is_c( format, "-x" ) ? "x" : "d";

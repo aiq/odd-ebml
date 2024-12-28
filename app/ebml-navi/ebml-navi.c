@@ -3,6 +3,7 @@
 #include "oddebml/oEbmlTrav.h"
 #include "oddebml/oEbmlMarker.h"
 
+#include "lib.h"
 #include "loop.h"
 
 static cChars get_file_path_arg( int argc,
@@ -32,8 +33,7 @@ int main( int argc, char* argv[] )
    NaviCtx ctx;
    if ( not init_ctx( &ctx, filePath, es ) )
    {
-      println_c_( "ERROR: {e}", es->err );
-      return EXIT_FAILURE;
+      return failln_( "ERROR: {e}, es->err" );
    }
 
    if ( not loop( &ctx ) )
@@ -44,7 +44,7 @@ int main( int argc, char* argv[] )
    }
 
    println_c_( "bye bye {cs:Q}", filePath );
-   deref_ctx( &ctx, es );
+   cleanup_ctx( &ctx, es );
 
    return EXIT_SUCCESS;
 }
